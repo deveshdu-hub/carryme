@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CarryMe | Smart Society Services</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Razorpay -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+<!-- 🔷 Navbar -->
+<header class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
+  <h1 class="text-xl font-bold">CarryMe</h1>
+  <button onclick="openLogin()" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+    Login
+  </button>
+</header>
+
+<!-- 🔷 Hero Section -->
+<section class="text-center py-12 px-4">
+  <h2 class="text-3xl md:text-4xl font-bold">
+    Society Services Made Simple
+  </h2>
+  <p class="text-gray-500 mt-3">
+    Book services, raise complaints, and manage everything in one place.
+  </p>
+
+  <button onclick="payNow()" class="mt-6 bg-black text-white px-6 py-3 rounded-xl">
+    Try Service ₹99
+  </button>
+</section>
+
+<!-- 🔷 Services -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 px-6 pb-12">
+
+  <div class="bg-white p-5 rounded-xl shadow">
+    <h3 class="text-lg font-semibold">🔧 Plumber</h3>
+    <p class="text-gray-500">Quick leak fixing & pipe work</p>
+  </div>
+
+  <div class="bg-white p-5 rounded-xl shadow">
+    <h3 class="text-lg font-semibold">⚡ Electrician</h3>
+    <p class="text-gray-500">Fast electrical solutions</p>
+  </div>
+
+  <div class="bg-white p-5 rounded-xl shadow">
+    <h3 class="text-lg font-semibold">📢 Complaint</h3>
+    <p class="text-gray-500">Raise issue in one click</p>
+  </div>
+
+</section>
+
+<!-- 🔷 Login Modal -->
+<div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+
+  <div class="bg-white p-6 rounded-xl w-80">
+    <h2 class="text-xl font-bold mb-4">Login</h2>
+
+    <input id="email" type="email" placeholder="Email"
+      class="w-full border p-2 mb-3 rounded">
+
+    <input id="password" type="password" placeholder="Password"
+      class="w-full border p-2 mb-3 rounded">
+
+    <button onclick="login()" class="bg-blue-600 text-white w-full py-2 rounded">
+      Login
+    </button>
+
+    <button onclick="closeLogin()" class="mt-2 text-gray-500 w-full">
+      Cancel
+    </button>
+  </div>
+
+</div>
+
+<!-- 🔷 Footer -->
+<footer class="text-center py-6 text-gray-500 text-sm">
+  © 2026 CarryMe.store — All rights reserved
+</footer>
+
+<!-- 🔷 Scripts -->
+<script>
+function openLogin() {
+  document.getElementById("loginModal").classList.remove("hidden");
+}
+
+function closeLogin() {
+  document.getElementById("loginModal").classList.add("hidden");
+}
+
+function login() {
+  let email = document.getElementById("email").value;
+  alert("Logged in as: " + email);
+}
+
+// Razorpay Payment
+function payNow() {
+  var options = {
+    key: "YOUR_RAZORPAY_KEY",
+    amount: 9900,
+    currency: "INR",
+    name: "CarryMe",
+    description: "Service Payment",
+    handler: function (response) {
+      alert("Payment Successful");
+    }
+  };
+
+  var rzp = new Razorpay(options);
+  rzp.open();
+}
+</script>
+
+</body>
+</html>
