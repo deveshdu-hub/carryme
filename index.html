@@ -156,7 +156,7 @@ footer {
     <h3>Sofa Cover</h3>
     <p>Stretchable washable</p>
     <div class="price">₹399</div>
-    <button onclick="order('Sofa Cover')">Order</button>
+     <button onclick="saveOrder('Table Cover',199)">
   </div>
 
   <div class="card">
@@ -164,7 +164,7 @@ footer {
     <h3>Washing Machine Cover</h3>
     <p>Dustproof waterproof</p>
     <div class="price">₹249</div>
-    <button onclick="order('Washing Machine Cover')">Order</button>
+    <button onclick="saveOrder('Washing Machine Cover',249)">
   </div>
 
 </section>
@@ -179,6 +179,32 @@ function order(product){
   window.open("https://wa.me/919891011883?text=" + msg);
 }
 </script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+var admin = require("firebase-admin");
+
+var serviceAccount = require("path/to/serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore();
+
+window.saveOrder = async function(product, price){
+  await addDoc(collection(db, "orders"), {
+    product: product,
+    total: price,
+    status: "Processing",
+    date: new Date()
+  });
+
+  alert("Order Saved!");
+}
+</script>
 </body>
 </html>
