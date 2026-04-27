@@ -100,4 +100,85 @@ footer {
 
 <header>
   <div class="logo">Carry<span>Me</span></div>
-  <div>India
+  <div>India Outlet Store</div>
+</header>
+
+<section class="hero">
+  <h1>Factory Deals <span>₹99 T-Shirts</span></h1>
+  <p>Direct factory products. No middleman.</p>
+  <a class="btn" href="https://wa.me/919891011883">Order on WhatsApp</a>
+</section>
+
+<section class="products">
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1583784561133-3c9c1c2d8f6c">
+    <h3>Bath Towel</h3>
+    <p>Soft cotton towel</p>
+    <div class="price">₹149</div>
+    <button onclick="order('Bath Towel')">Order</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1603252109303-2751441dd157">
+    <h3>Face Towel Pack</h3>
+    <p>Pack of 3</p>
+    <div class="price">₹99</div>
+    <button onclick="order('Face Towel Pack')">Order</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1599058917765-a780eda07a3e">
+    <h3>Gym Towel</h3>
+    <p>Sports microfiber</p>
+    <div class="price">₹119</div>
+    <button onclick="order('Gym Towel')">Order</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b">
+    <h3>₹99 T-Shirt</h3>
+    <p>All sizes available</p>
+    <div class="price">₹99</div>
+    <button onclick="order('T-Shirt ₹99')">Order</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1616628182507-7d3a5b9d3f31">
+    <h3>Table Cover</h3>
+    <p>Designer waterproof</p>
+    <div class="price">₹199</div>
+    <button onclick="order('Table Cover')">Order</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7">
+    <h3>Sofa Cover</h3>
+    <p>Stretchable washable</p>
+    <div class="price">₹399</div>
+    <button onclick="order('Sofa Cover')">Order</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952">
+    <h3>Washing Machine Cover</h3>
+    <p>Dustproof waterproof</p>
+    <div class="price">₹249</div>
+    <button onclick="order('Washing Machine Cover')">Order</button>
+  </div>
+
+</section>
+
+<footer>
+  CarryMe © 2026 | WhatsApp: +91 9891011883
+</footer>
+
+<script>
+function order(product){
+  let msg = encodeURIComponent("Hi, I want to order: " + product);
+  window.open("https://wa.me/919891011883?text=" + msg);
+}
+</script>
+
+</body>
+</html>
