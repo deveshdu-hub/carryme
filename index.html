@@ -1,276 +1,760 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>CarryMe Store</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CarryMe Store – Premium Home Essentials</title>
+<meta name="description" content="Shop premium table covers, dining mats and home essentials at CarryMe Store. Fast delivery, easy returns." />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --cream: #FAF7F2;
+    --warm-white: #FFFDF9;
+    --charcoal: #1A1814;
+    --brown: #7C5C3E;
+    --gold: #C9973A;
+    --gold-light: #E8C47A;
+    --rust: #C0522A;
+    --sage: #7A8C6E;
+    --muted: #8A8278;
+    --border: #E8E0D4;
+    --shadow: 0 4px 24px rgba(26,24,20,0.10);
+    --shadow-lg: 0 12px 48px rgba(26,24,20,0.16);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); min-height: 100vh; }
 
-  <style>
-    body {
-      font-family: Arial;
-      margin: 0;
-      background: #f5f5f5;
-    }
+  /* ── HEADER ── */
+  header {
+    background: var(--warm-white);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(26,24,20,0.07);
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px; gap: 16px;
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 900; color: var(--charcoal); text-decoration: none; letter-spacing: -0.5px; }
+  .logo span { color: var(--gold); }
+  .search-bar {
+    flex: 1; max-width: 420px;
+    display: flex; align-items: center;
+    background: var(--cream); border: 1.5px solid var(--border);
+    border-radius: 32px; overflow: hidden; padding: 0 16px;
+    transition: border-color .2s;
+  }
+  .search-bar:focus-within { border-color: var(--gold); }
+  .search-bar input { border: none; background: transparent; flex: 1; padding: 9px 8px; font-family: 'DM Sans', sans-serif; font-size: .95rem; color: var(--charcoal); outline: none; }
+  .search-bar button { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 1.1rem; padding: 4px; }
+  .header-actions { display: flex; align-items: center; gap: 12px; }
+  .btn-icon {
+    background: none; border: 1.5px solid var(--border); border-radius: 50%; width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative;
+    transition: border-color .2s, background .2s; font-size: 1.15rem;
+  }
+  .btn-icon:hover { border-color: var(--gold); background: #FDF6E8; }
+  .badge {
+    position: absolute; top: -5px; right: -5px;
+    background: var(--rust); color: #fff; font-size: .65rem; font-weight: 700;
+    width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .btn-login {
+    background: var(--charcoal); color: #fff; border: none; border-radius: 24px;
+    padding: 9px 20px; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600;
+    cursor: pointer; transition: background .2s;
+  }
+  .btn-login:hover { background: var(--brown); }
 
-    header {
-      background: black;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 20px;
-    }
+  /* ── NAV ── */
+  nav { background: var(--charcoal); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 0; padding: 0 24px; }
+  .nav-inner a {
+    color: rgba(255,255,255,.8); text-decoration: none; font-size: .9rem; font-weight: 500;
+    padding: 12px 16px; display: block; transition: color .2s, background .2s; letter-spacing: .3px;
+  }
+  .nav-inner a:hover, .nav-inner a.active { color: var(--gold-light); }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      padding: 15px;
-    }
+  /* ── HERO ── */
+  .hero {
+    max-width: 1200px; margin: 40px auto 0; padding: 0 24px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; min-height: 420px;
+  }
+  .hero-text { animation: fadeUp .7s ease both; }
+  .hero-tag { display: inline-block; background: #FDF1DA; color: var(--gold); border-radius: 24px; font-size: .8rem; font-weight: 600; padding: 5px 14px; margin-bottom: 18px; letter-spacing: .5px; text-transform: uppercase; }
+  .hero-text h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4vw, 3.4rem); font-weight: 900; line-height: 1.1; margin-bottom: 20px; color: var(--charcoal); }
+  .hero-text h1 em { font-style: normal; color: var(--gold); }
+  .hero-text p { color: var(--muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 28px; max-width: 400px; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary { background: var(--charcoal); color: #fff; border: none; border-radius: 32px; padding: 13px 28px; font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 600; cursor: pointer; transition: background .2s, transform .15s; }
+  .btn-primary:hover { background: var(--brown); transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--charcoal); border: 1.5px solid var(--charcoal); border-radius: 32px; padding: 12px 24px; font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 600; cursor: pointer; transition: all .2s; }
+  .btn-outline:hover { background: var(--charcoal); color: #fff; }
+  .hero-stats { display: flex; gap: 28px; margin-top: 36px; }
+  .stat { }
+  .stat strong { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--charcoal); display: block; }
+  .stat span { font-size: .8rem; color: var(--muted); }
+  .hero-img {
+    animation: fadeUp .9s ease both;
+    border-radius: 24px; overflow: hidden; height: 420px;
+    position: relative; box-shadow: var(--shadow-lg);
+  }
+  .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+  .hero-badge {
+    position: absolute; bottom: 20px; left: 20px;
+    background: rgba(255,255,255,.95); border-radius: 16px; padding: 14px 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.12); display: flex; align-items: center; gap: 10px;
+  }
+  .hero-badge .emoji { font-size: 1.6rem; }
+  .hero-badge strong { display: block; font-size: .9rem; color: var(--charcoal); }
+  .hero-badge span { font-size: .78rem; color: var(--muted); }
 
-    .card {
-      background: white;
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+  /* ── SECTION ── */
+  .section { max-width: 1200px; margin: 60px auto 0; padding: 0 24px; }
+  .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 32px; }
+  .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; }
+  .section-header a { color: var(--gold); text-decoration: none; font-weight: 600; font-size: .9rem; }
 
-    .card img {
-      width: 100%;
-      border-radius: 10px;
-    }
+  /* ── CATEGORIES ── */
+  .cats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+  .cat-pill {
+    border: 1.5px solid var(--border); border-radius: 24px; padding: 8px 18px;
+    font-size: .85rem; font-weight: 500; cursor: pointer; transition: all .2s; background: var(--warm-white);
+    color: var(--charcoal);
+  }
+  .cat-pill:hover, .cat-pill.active { background: var(--charcoal); color: #fff; border-color: var(--charcoal); }
 
-    .price {
-      font-weight: bold;
-      margin: 10px 0;
-    }
+  /* ── PRODUCT GRID ── */
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 24px; }
+  .product-card {
+    background: var(--warm-white); border-radius: 20px; overflow: hidden;
+    border: 1px solid var(--border); transition: box-shadow .25s, transform .2s;
+    display: flex; flex-direction: column;
+  }
+  .product-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+  .product-img { position: relative; height: 210px; overflow: hidden; background: #EDE8E0; }
+  .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .product-card:hover .product-img img { transform: scale(1.06); }
+  .product-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--rust); color: #fff; font-size: .72rem; font-weight: 700;
+    border-radius: 8px; padding: 3px 9px; letter-spacing: .3px;
+  }
+  .product-badge.new { background: var(--sage); }
+  .wishlist-btn {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(255,255,255,.9); border: none; border-radius: 50%; width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem;
+    transition: background .2s;
+  }
+  .wishlist-btn:hover { background: #fff; }
+  .product-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+  .product-body h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 5px; }
+  .product-body .desc { font-size: .82rem; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  .stars { color: var(--gold); font-size: .82rem; margin-bottom: 12px; }
+  .stars span { color: var(--muted); font-size: .8rem; margin-left: 4px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .price { font-size: 1.25rem; font-weight: 700; color: var(--charcoal); }
+  .price-old { font-size: .82rem; text-decoration: line-through; color: var(--muted); margin-left: 5px; font-weight: 400; }
+  .btn-cart {
+    background: var(--charcoal); color: #fff; border: none; border-radius: 20px;
+    padding: 9px 16px; font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 600;
+    cursor: pointer; transition: background .2s;
+  }
+  .btn-cart:hover { background: var(--brown); }
 
-    button {
-      background: black;
-      color: white;
-      padding: 8px 15px;
-      border: none;
-      border-radius: 5px;
-    }
+  /* ── TRUST BANNER ── */
+  .trust-bar {
+    background: var(--charcoal); margin: 60px 0 0; padding: 28px 0;
+  }
+  .trust-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+  }
+  .trust-item { display: flex; align-items: center; gap: 14px; }
+  .trust-icon { font-size: 2rem; }
+  .trust-item strong { display: block; color: #fff; font-size: .95rem; font-weight: 600; }
+  .trust-item span { color: rgba(255,255,255,.55); font-size: .8rem; }
 
-    .cart-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: black;
-      color: white;
-      padding: 12px;
-      border-radius: 50%;
-      cursor: pointer;
-    }
+  /* ── OFFERS ── */
+  .offers-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+  .offer-card {
+    border-radius: 20px; overflow: hidden; position: relative; height: 220px;
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 28px;
+    box-shadow: var(--shadow);
+  }
+  .offer-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 20%, rgba(0,0,0,.65) 100%); }
+  .offer-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .offer-content { position: relative; z-index: 1; }
+  .offer-content p { color: rgba(255,255,255,.8); font-size: .82rem; margin-bottom: 4px; }
+  .offer-content h3 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.4rem; font-weight: 700; margin-bottom: 10px; }
+  .offer-content .btn-offer { background: var(--gold); color: var(--charcoal); border: none; border-radius: 20px; padding: 8px 18px; font-size: .85rem; font-weight: 700; cursor: pointer; }
 
-    #cartBox {
-      display: none;
-      position: fixed;
-      bottom: 80px;
-      right: 20px;
-      background: white;
-      padding: 15px;
-      width: 260px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      border-radius: 10px;
-    }
+  /* ── REVIEWS ── */
+  .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .review-card { background: var(--warm-white); border-radius: 16px; padding: 22px; border: 1px solid var(--border); }
+  .review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: .95rem; flex-shrink: 0; }
+  .review-header strong { display: block; font-size: .9rem; }
+  .review-header span { font-size: .78rem; color: var(--muted); }
+  .review-card p { font-size: .88rem; color: #4A4540; line-height: 1.65; }
 
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0;
-    }
-  </style>
+  /* ── NEWSLETTER ── */
+  .newsletter {
+    background: linear-gradient(135deg, var(--charcoal) 0%, #3A2E24 100%);
+    border-radius: 24px; padding: 52px 48px; margin: 60px 24px 0;
+    max-width: 1152px; margin-left: auto; margin-right: auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 32px;
+  }
+  .newsletter h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+  .newsletter p { color: rgba(255,255,255,.6); font-size: .9rem; }
+  .nl-form { display: flex; gap: 10px; flex-wrap: wrap; }
+  .nl-form input { background: rgba(255,255,255,.12); border: 1.5px solid rgba(255,255,255,.2); border-radius: 28px; padding: 12px 20px; color: #fff; font-family: 'DM Sans', sans-serif; font-size: .9rem; outline: none; min-width: 240px; }
+  .nl-form input::placeholder { color: rgba(255,255,255,.4); }
+  .nl-form button { background: var(--gold); color: var(--charcoal); border: none; border-radius: 28px; padding: 12px 24px; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 700; cursor: pointer; }
+
+  /* ── FOOTER ── */
+  footer { background: #141210; margin-top: 60px; padding: 52px 0 0; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+  .footer-brand .logo { font-size: 1.5rem; color: var(--cream); }
+  .footer-brand p { color: rgba(255,255,255,.45); font-size: .85rem; line-height: 1.7; margin: 14px 0 20px; }
+  .social-links { display: flex; gap: 10px; }
+  .social-links a { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.6); text-decoration: none; font-size: .95rem; transition: all .2s; }
+  .social-links a:hover { border-color: var(--gold); color: var(--gold); }
+  .footer-col h4 { color: rgba(255,255,255,.85); font-size: .9rem; font-weight: 600; margin-bottom: 16px; letter-spacing: .5px; }
+  .footer-col a { display: block; color: rgba(255,255,255,.45); text-decoration: none; font-size: .85rem; margin-bottom: 10px; transition: color .2s; }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,.08); margin-top: 48px; padding: 20px 24px; max-width: 1200px; margin-left: auto; margin-right: auto; display: flex; align-items: center; justify-content: space-between; }
+  .footer-bottom p { color: rgba(255,255,255,.3); font-size: .8rem; }
+  .footer-payments { display: flex; gap: 8px; }
+  .pay-badge { background: rgba(255,255,255,.1); border-radius: 6px; padding: 4px 10px; font-size: .75rem; color: rgba(255,255,255,.5); font-weight: 600; }
+
+  /* ── CART DRAWER ── */
+  .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; opacity: 0; pointer-events: none; transition: opacity .3s; }
+  .cart-overlay.open { opacity: 1; pointer-events: all; }
+  .cart-drawer {
+    position: fixed; right: 0; top: 0; bottom: 0; width: 400px; max-width: 100vw;
+    background: var(--warm-white); z-index: 201; transform: translateX(100%); transition: transform .35s cubic-bezier(.4,0,.2,1);
+    display: flex; flex-direction: column; box-shadow: -8px 0 40px rgba(0,0,0,.15);
+  }
+  .cart-drawer.open { transform: translateX(0); }
+  .cart-head { display: flex; align-items: center; justify-content: space-between; padding: 24px; border-bottom: 1px solid var(--border); }
+  .cart-head h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; }
+  .cart-close { background: none; border: none; cursor: pointer; font-size: 1.3rem; color: var(--muted); }
+  .cart-items { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .cart-item { display: flex; gap: 14px; align-items: center; background: var(--cream); border-radius: 14px; padding: 14px; }
+  .cart-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
+  .cart-item-info { flex: 1; }
+  .cart-item-info strong { display: block; font-size: .9rem; margin-bottom: 4px; }
+  .cart-item-info .cart-price { color: var(--gold); font-weight: 700; font-size: .95rem; }
+  .qty-ctrl { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .qty-ctrl button { background: var(--charcoal); color: #fff; border: none; border-radius: 6px; width: 26px; height: 26px; cursor: pointer; font-size: 1rem; font-weight: 700; }
+  .qty-ctrl span { font-size: .9rem; font-weight: 600; min-width: 20px; text-align: center; }
+  .cart-remove { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 1.1rem; }
+  .cart-foot { padding: 20px 24px; border-top: 1px solid var(--border); }
+  .cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .cart-total-row span { color: var(--muted); font-size: .88rem; }
+  .cart-total-row strong { font-size: 1.1rem; color: var(--charcoal); }
+  .cart-grand { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-top: 1px solid var(--border); margin: 6px 0 16px; }
+  .cart-grand span { font-size: 1rem; font-weight: 600; }
+  .cart-grand strong { font-size: 1.4rem; font-weight: 700; color: var(--charcoal); }
+  .btn-checkout { width: 100%; background: var(--charcoal); color: #fff; border: none; border-radius: 28px; padding: 15px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .2s; }
+  .btn-checkout:hover { background: var(--brown); }
+  .btn-continue { width: 100%; background: transparent; color: var(--charcoal); border: 1.5px solid var(--border); border-radius: 28px; padding: 12px; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600; cursor: pointer; margin-top: 10px; }
+  .empty-cart { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); gap: 12px; }
+  .empty-cart span { font-size: 3rem; }
+
+  /* ── MODAL ── */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .3s; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: var(--warm-white); border-radius: 24px; padding: 36px; max-width: 460px; width: 100%; position: relative; transform: scale(.95); transition: transform .3s; }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+  .modal p { color: var(--muted); font-size: .9rem; margin-bottom: 24px; }
+  .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--muted); }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: 6px; color: var(--charcoal); }
+  .form-group input, .form-group select {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 12px; padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif; font-size: .92rem; color: var(--charcoal); background: var(--cream); outline: none;
+    transition: border-color .2s;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--gold); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn-full { width: 100%; background: var(--charcoal); color: #fff; border: none; border-radius: 28px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background .2s; }
+  .btn-full:hover { background: var(--brown); }
+  .modal-switch { text-align: center; margin-top: 14px; font-size: .85rem; color: var(--muted); }
+  .modal-switch a { color: var(--gold); cursor: pointer; font-weight: 600; text-decoration: none; }
+  .tab-btns { display: flex; gap: 8px; margin-bottom: 20px; background: var(--cream); border-radius: 12px; padding: 4px; }
+  .tab-btn { flex: 1; padding: 9px; border: none; background: transparent; border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 600; cursor: pointer; transition: all .2s; color: var(--muted); }
+  .tab-btn.active { background: var(--charcoal); color: #fff; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--charcoal); color: #fff; border-radius: 32px; padding: 12px 24px;
+    font-size: .9rem; font-weight: 500; z-index: 400; opacity: 0; pointer-events: none;
+    transition: all .35s; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-img { height: 280px; }
+    .trust-inner { grid-template-columns: repeat(2, 1fr); }
+    .offers-grid { grid-template-columns: 1fr; }
+    .reviews-grid { grid-template-columns: 1fr 1fr; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .newsletter { flex-direction: column; padding: 36px 28px; }
+  }
+  @media (max-width: 600px) {
+    .header-inner { flex-wrap: wrap; }
+    .search-bar { order: 3; max-width: 100%; width: 100%; }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; }
+    .trust-inner { grid-template-columns: 1fr 1fr; }
+  }
+</style>
 </head>
-
 <body>
 
-<header>🛒 CarryMe Store</header>
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">Carry<span>Me</span></a>
+    <div class="search-bar">
+      <button>🔍</button>
+      <input type="text" placeholder="Search table covers, mats, kitchen…" />
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" title="Wishlist">♡</button>
+      <button class="btn-icon" id="cartBtn" title="Cart">
+        🛒
+        <span class="badge" id="cartBadge">0</span>
+      </button>
+      <button class="btn-login" id="loginBtn">Sign In</button>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="active">Home</a>
+    <a href="#products">Table Covers</a>
+    <a href="#products">Dining Mats</a>
+    <a href="#products">Kitchen</a>
+    <a href="#products">New Arrivals</a>
+    <a href="#offers">Offers</a>
+    <a href="#" id="dealerNav" style="margin-left:auto; color: var(--gold-light);">Dealer / Retailer</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <div class="hero-tag">✨ New Collection 2025</div>
+    <h1>Dress Your Table.<br>Elevate Every <em>Meal.</em></h1>
+    <p>Premium table covers, dining mats, and home essentials that bring elegance to your everyday living — delivered fast across India.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Shop Now</button>
+      <button class="btn-outline" onclick="document.getElementById('offers').scrollIntoView({behavior:'smooth'})">View Offers</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><strong>12K+</strong><span>Happy Customers</span></div>
+      <div class="stat"><strong>4.8★</strong><span>Avg. Rating</span></div>
+      <div class="stat"><strong>Free</strong><span>Delivery ₹499+</span></div>
+    </div>
+  </div>
+  <div class="hero-img">
+    <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80" alt="Beautiful dining table setup" />
+    <div class="hero-badge">
+      <span class="emoji">🎁</span>
+      <div>
+        <strong>Summer Sale On!</strong>
+        <span>Up to 40% off select items</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <span class="trust-icon">🚚</span>
+      <div><strong>Free Delivery</strong><span>On orders above ₹499</span></div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">↩️</span>
+      <div><strong>Easy Returns</strong><span>7-day hassle-free returns</span></div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">🔒</span>
+      <div><strong>Secure Payment</strong><span>UPI, Cards, COD accepted</span></div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">🏆</span>
+      <div><strong>Quality Assured</strong><span>Premium washable materials</span></div>
+    </div>
+  </div>
+</div>
 
 <!-- PRODUCTS -->
-<section>
-  <h2 style="padding:10px">🔥 Table Covers</h2>
-
-  <div class="grid">
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1616627981467-0b3f9d2c0e6e">
-      <h3>Premium Table Cover</h3>
-      <p>Stylish | Washable</p>
-      <div class="price">₹399</div>
-      <button onclick="addToCart('Table Cover',399)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c">
-      <h3>Designer Table Cover</h3>
-      <p>Luxury Look</p>
-      <div class="price">₹499</div>
-      <button onclick="addToCart('Designer Cover',499)">Add to Cart</button>
-    </div>
+<div class="section" id="products">
+  <div class="section-header">
+    <h2>Our Products</h2>
+    <a href="#">View All →</a>
   </div>
-</section>
-
-
-<section>
-  <h2 style="padding:10px">🍽 Table Mats</h2>
-
-  <div class="grid">
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1583778176476-4a8b02eec2c4">
-      <h3>Dining Mats (6 pcs)</h3>
-      <div class="price">₹299</div>
-      <button onclick="addToCart('Table Mats',299)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092">
-      <h3>Premium Mats Set</h3>
-      <div class="price">₹349</div>
-      <button onclick="addToCart('Premium Mats',349)">Add to Cart</button>
-    </div>
+  <div class="cats" id="catFilter">
+    <div class="cat-pill active" data-cat="all">All</div>
+    <div class="cat-pill" data-cat="covers">Table Covers</div>
+    <div class="cat-pill" data-cat="mats">Dining Mats</div>
+    <div class="cat-pill" data-cat="kitchen">Kitchen</div>
+    <div class="cat-pill" data-cat="decor">Decor</div>
   </div>
-</section>
-
-
-<section>
-  <h2 style="padding:10px">🧻 Towels Collection</h2>
-
-  <div class="grid">
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952">
-      <h3>Soft Cotton Towel</h3>
-      <p>Ultra Soft</p>
-      <div class="price">₹199</div>
-      <button onclick="addToCart('Cotton Towel',199)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1600585154340-0b3f9d2c0e6e">
-      <h3>Luxury Bath Towel</h3>
-      <p>Premium Quality</p>
-      <div class="price">₹299</div>
-      <button onclick="addToCart('Bath Towel',299)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1598300053653-1d4f78b1c8d5">
-      <h3>Hand Towel Pack</h3>
-      <p>Pack of 3</p>
-      <div class="price">₹149</div>
-      <button onclick="addToCart('Hand Towels',149)">Add to Cart</button>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1622445275576-721325763afe">
-      <h3>Microfiber Towel</h3>
-      <p>Quick Dry</p>
-      <div class="price">₹249</div>
-      <button onclick="addToCart('Microfiber Towel',249)">Add to Cart</button>
-    </div>
-
-  </div>
-</section>
-
-<!-- SIGNUP -->
-<div style="padding:15px;background:white;margin:10px;border-radius:10px">
-  <h3>Register</h3>
-
-  <input id="name" placeholder="Name">
-  <input id="phone" placeholder="Phone">
-
-  <select id="role">
-    <option>Customer</option>
-    <option>Retailer</option>
-    <option>Dealer</option>
-  </select>
-
-  <button onclick="registerUser()">Register</button>
+  <div class="product-grid" id="productGrid"></div>
 </div>
 
-<!-- CART BUTTON -->
-<div class="cart-btn" onclick="openCart()">
-🛒 <span id="cartCount">0</span>
+<!-- OFFERS -->
+<div class="section" id="offers" style="margin-top:60px">
+  <div class="section-header">
+    <h2>Special Offers</h2>
+    <a href="#">See All Deals →</a>
+  </div>
+  <div class="offers-grid">
+    <div class="offer-card">
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="Sale offer" />
+      <div class="offer-content">
+        <p>Limited Time</p>
+        <h3>Summer Collection<br>Up to 40% Off</h3>
+        <button class="btn-offer">Shop Now</button>
+      </div>
+    </div>
+    <div class="offer-card">
+      <img src="https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=600&q=80" alt="Bundle offer" />
+      <div class="offer-content">
+        <p>Bundle Deal</p>
+        <h3>Buy 2 Get 1 Free on Mats</h3>
+        <button class="btn-offer">Grab Deal</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- CART BOX -->
-<div id="cartBox">
-  <h3>Cart</h3>
-
-  <div id="cartItems"></div>
-
-  <p>Total: <span id="cartTotal">₹0</span></p>
-
-  <p>Scan & Pay</p>
-  <img src="qr.png" width="150">
-
-  <button onclick="placeOrder()">I Have Paid</button>
-  <button onclick="closeCart()">Close</button>
+<!-- REVIEWS -->
+<div class="section" style="margin-top:60px">
+  <div class="section-header">
+    <h2>What Customers Say</h2>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-header">
+        <div class="avatar">P</div>
+        <div><strong>Priya Sharma</strong><span>⭐⭐⭐⭐⭐ · Mumbai</span></div>
+      </div>
+      <p>The table cover is absolutely gorgeous! Super easy to wash and the fabric quality is top-notch. Highly recommend to anyone redoing their dining room.</p>
+    </div>
+    <div class="review-card">
+      <div class="review-header">
+        <div class="avatar" style="background:var(--sage)">R</div>
+        <div><strong>Rajan Mehta</strong><span>⭐⭐⭐⭐⭐ · Pune</span></div>
+      </div>
+      <p>Ordered the dining mats set for my new home. The luxury design is exactly as shown — even better in person. Delivery was super fast too!</p>
+    </div>
+    <div class="review-card">
+      <div class="review-header">
+        <div class="avatar" style="background:var(--rust)">A</div>
+        <div><strong>Ananya Patel</strong><span>⭐⭐⭐⭐☆ · Bengaluru</span></div>
+      </div>
+      <p>Good quality products at a very reasonable price. The table cover fits perfectly. Exchanged one item and the process was smooth and quick.</p>
+    </div>
+  </div>
 </div>
+
+<!-- NEWSLETTER -->
+<div class="newsletter">
+  <div>
+    <h2>Get Exclusive Deals First</h2>
+    <p>Subscribe to our newsletter and get 10% off your first order.</p>
+  </div>
+  <div class="nl-form">
+    <input type="email" placeholder="Enter your email address" />
+    <button onclick="showToast('🎉 Subscribed! 10% off code sent to your email.')">Subscribe</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="logo" style="color:var(--cream)">Carry<span style="color:var(--gold)">Me</span></a>
+      <p>Premium home essentials that make your dining table a statement — delivered across India with love.</p>
+      <div class="social-links">
+        <a href="#">📘</a><a href="#">📷</a><a href="#">🐦</a><a href="#">▶️</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>SHOP</h4>
+      <a href="#">Table Covers</a>
+      <a href="#">Dining Mats</a>
+      <a href="#">Kitchen Essentials</a>
+      <a href="#">New Arrivals</a>
+      <a href="#">Sale</a>
+    </div>
+    <div class="footer-col">
+      <h4>HELP</h4>
+      <a href="#">Track Order</a>
+      <a href="#">Returns & Refunds</a>
+      <a href="#">Shipping Info</a>
+      <a href="#">FAQ</a>
+      <a href="#">Contact Us</a>
+    </div>
+    <div class="footer-col">
+      <h4>COMPANY</h4>
+      <a href="#">About Us</a>
+      <a href="#" id="dealerFooter">Dealer / Retailer</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Sitemap</a>
+    </div>
+  </div>
+  <div style="border-top: 1px solid rgba(255,255,255,.08); margin-top: 48px;">
+    <div class="footer-bottom">
+      <p>© 2025 CarryMe Store. All rights reserved.</p>
+      <div class="footer-payments">
+        <span class="pay-badge">UPI</span>
+        <span class="pay-badge">Visa</span>
+        <span class="pay-badge">MC</span>
+        <span class="pay-badge">COD</span>
+        <span class="pay-badge">GPay</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h3>Your Cart 🛒</h3>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-total-row"><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div>
+    <div class="cart-total-row"><span>Delivery</span><strong id="cartDelivery">Free</strong></div>
+    <div class="cart-grand"><span>Total</span><strong id="cartTotal">₹0</strong></div>
+    <button class="btn-checkout" onclick="showCheckout()">Proceed to Checkout</button>
+    <button class="btn-continue" onclick="closeCart()">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    <h3>Welcome Back</h3>
+    <p>Sign in to your CarryMe account</p>
+    <div class="tab-btns">
+      <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" onclick="switchTab('register')">Register</button>
+    </div>
+    <div id="loginForm">
+      <div class="form-group"><label>Phone / Email</label><input type="text" placeholder="Enter phone or email" /></div>
+      <div class="form-group"><label>Password</label><input type="password" placeholder="Enter password" /></div>
+      <button class="btn-full" onclick="closeModal('authModal');showToast('✅ Signed in successfully!')">Sign In</button>
+      <p style="text-align:center;margin-top:12px;font-size:.82rem;color:var(--muted)">Forgot password? <a style="color:var(--gold);cursor:pointer">Reset here</a></p>
+    </div>
+    <div id="registerForm" style="display:none">
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" placeholder="First name" /></div>
+        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Last name" /></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="Your email" /></div>
+      <div class="form-group"><label>Phone</label><input type="tel" placeholder="Mobile number" /></div>
+      <div class="form-group"><label>Account Type</label>
+        <select><option>Customer</option><option>Retailer</option><option>Dealer</option></select>
+      </div>
+      <div class="form-group"><label>Password</label><input type="password" placeholder="Create password" /></div>
+      <button class="btn-full" onclick="closeModal('authModal');showToast('🎉 Account created! Welcome to CarryMe.')">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal" style="max-width:500px">
+    <button class="modal-close" onclick="closeModal('checkoutModal')">✕</button>
+    <h3>Checkout</h3>
+    <p>Enter your delivery details</p>
+    <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your full name" /></div>
+    <div class="form-group"><label>Phone</label><input type="tel" placeholder="10-digit mobile number" /></div>
+    <div class="form-group"><label>Address</label><input type="text" placeholder="House / Flat / Street" /></div>
+    <div class="form-row">
+      <div class="form-group"><label>City</label><input type="text" placeholder="City" /></div>
+      <div class="form-group"><label>Pincode</label><input type="text" placeholder="Pincode" /></div>
+    </div>
+    <div class="form-group"><label>Payment Method</label>
+      <select>
+        <option>UPI / QR Scan</option>
+        <option>Credit / Debit Card</option>
+        <option>Cash on Delivery</option>
+        <option>Google Pay / PhonePe</option>
+      </select>
+    </div>
+    <button class="btn-full" onclick="placeOrder()">Place Order →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <script>
+const products = [
+  { id:1, name:'Premium Table Cover', desc:'Stylish | Washable | Durable', price:399, old:599, img:'https://images.unsplash.com/photo-1616627981467-0b3f9d2c0e6e?w=500&q=80', badge:'Sale', cat:'covers', rating:'4.8', reviews:124 },
+  { id:2, name:'Dining Table Mats (6 pcs)', desc:'Luxury Design | Anti-slip', price:299, old:499, img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&q=80', badge:'Bestseller', cat:'mats', rating:'4.9', reviews:248 },
+  { id:3, name:'Classic Cotton Cover', desc:'Breathable | Elegant | Soft', price:449, old:700, img:'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=500&q=80', badge:'New', cat:'covers', rating:'4.7', reviews:86 },
+  { id:4, name:'Kitchen Linen Runner', desc:'Modern Design | 100% Cotton', price:249, old:399, img:'https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=500&q=80', badge:'', cat:'kitchen', rating:'4.6', reviews:62 },
+  { id:5, name:'Placemat Set (4 pcs)', desc:'Water-resistant | Easy Clean', price:349, old:550, img:'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&q=80', badge:'Sale', cat:'mats', rating:'4.8', reviews:93 },
+  { id:6, name:'Floral Table Runner', desc:'Handcrafted | Decorative', price:199, old:350, img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80', badge:'New', cat:'decor', rating:'4.5', reviews:45 },
+  { id:7, name:'Waterproof PVC Cover', desc:'Heavy Duty | Clear Finish', price:499, old:750, img:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&q=80', badge:'', cat:'covers', rating:'4.7', reviews:71 },
+  { id:8, name:'Boho Woven Mat Set', desc:'Handwoven | Eco-friendly', price:379, old:580, img:'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=500&q=80', badge:'New', cat:'mats', rating:'4.6', reviews:38 },
+];
+
 let cart = [];
+let currentCat = 'all';
 
-// ADD TO CART
-function addToCart(name, price){
-    cart.push({name, price});
-    updateCart();
-    alert(name + " added");
+function renderProducts(cat) {
+  const grid = document.getElementById('productGrid');
+  const filtered = cat === 'all' ? products : products.filter(p => p.cat === cat);
+  grid.innerHTML = filtered.map(p => `
+    <div class="product-card">
+      <div class="product-img">
+        <img src="${p.img}" alt="${p.name}" loading="lazy" />
+        ${p.badge ? `<span class="product-badge ${p.badge==='New'?'new':''}">${p.badge}</span>` : ''}
+        <button class="wishlist-btn" onclick="showToast('❤️ Added to wishlist!')">♡</button>
+      </div>
+      <div class="product-body">
+        <h3>${p.name}</h3>
+        <div class="desc">${p.desc}</div>
+        <div class="stars">${'★'.repeat(Math.floor(p.rating))}${'☆'.repeat(5-Math.floor(p.rating))} <span>(${p.reviews})</span></div>
+        <div class="product-footer">
+          <div><span class="price">₹${p.price}</span><span class="price-old">₹${p.old}</span></div>
+          <button class="btn-cart" onclick="addToCart(${p.id})">+ Add</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
-// UPDATE CART
-function updateCart(){
-    let total = 0;
-    let html = "";
-
-    cart.forEach(item => {
-        total += item.price;
-        html += "<p>"+item.name+" - ₹"+item.price+"</p>";
-    });
-
-    document.getElementById("cartItems").innerHTML = html;
-    document.getElementById("cartTotal").innerText = "₹" + total;
-    document.getElementById("cartCount").innerText = cart.length;
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  const existing = cart.find(x => x.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ ...p, qty: 1 });
+  updateCartBadge();
+  showToast(`🛒 ${p.name} added to cart!`);
+  renderCart();
 }
 
-// OPEN / CLOSE
-function openCart(){
-    document.getElementById("cartBox").style.display = "block";
+function updateCartBadge() {
+  const total = cart.reduce((s, x) => s + x.qty, 0);
+  document.getElementById('cartBadge').textContent = total;
 }
 
-function closeCart(){
-    document.getElementById("cartBox").style.display = "none";
+function renderCart() {
+  const el = document.getElementById('cartItems');
+  const foot = document.getElementById('cartFoot');
+  if (!cart.length) {
+    el.innerHTML = `<div class="empty-cart"><span>🛒</span><p>Your cart is empty</p><button class="btn-primary" onclick="closeCart()" style="margin-top:8px">Shop Now</button></div>`;
+    foot.style.display = 'none';
+    return;
+  }
+  foot.style.display = 'block';
+  el.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <img src="${item.img}" alt="${item.name}" />
+      <div class="cart-item-info">
+        <strong>${item.name}</strong>
+        <div class="cart-price">₹${item.price}</div>
+        <div class="qty-ctrl">
+          <button onclick="changeQty(${item.id}, -1)">−</button>
+          <span>${item.qty}</span>
+          <button onclick="changeQty(${item.id}, 1)">+</button>
+        </div>
+      </div>
+      <button class="cart-remove" onclick="removeFromCart(${item.id})">🗑</button>
+    </div>
+  `).join('');
+  const sub = cart.reduce((s, x) => s + x.price * x.qty, 0);
+  const delivery = sub >= 499 ? 0 : 49;
+  document.getElementById('cartSubtotal').textContent = `₹${sub}`;
+  document.getElementById('cartDelivery').textContent = delivery === 0 ? 'Free 🎉' : `₹${delivery}`;
+  document.getElementById('cartTotal').textContent = `₹${sub + delivery}`;
 }
 
-// PLACE ORDER
-function placeOrder(){
-    if(cart.length === 0){
-        alert("Cart empty");
-        return;
-    }
-
-    alert("Order Placed ✅");
-    cart = [];
-    updateCart();
-    closeCart();
+function changeQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if (item) { item.qty += delta; if (item.qty <= 0) cart = cart.filter(x => x.id !== id); }
+  updateCartBadge(); renderCart();
 }
 
-// SIMPLE REGISTER
-function registerUser(){
-    let name = document.getElementById("name").value;
-    let phone = document.getElementById("phone").value;
-    let role = document.getElementById("role").value;
+function removeFromCart(id) { cart = cart.filter(x => x.id !== id); updateCartBadge(); renderCart(); }
 
-    if(!name || !phone){
-        alert("Fill details");
-        return;
-    }
-
-    localStorage.setItem("user", JSON.stringify({name, phone, role}));
-
-    alert("Registered as " + role);
+function openCart() {
+  renderCart();
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartDrawer').classList.add('open');
 }
+function closeCart() {
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartDrawer').classList.remove('open');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function switchTab(tab) {
+  document.getElementById('loginForm').style.display = tab === 'login' ? '' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? '' : 'none';
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', (tab==='login'&&i===0)||(tab==='register'&&i===1)));
+}
+
+function showCheckout() { closeCart(); openModal('checkoutModal'); }
+
+function placeOrder() {
+  closeModal('checkoutModal');
+  cart = []; updateCartBadge();
+  showToast('🎉 Order placed! You\'ll get a confirmation SMS shortly.');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Category filter
+document.getElementById('catFilter').addEventListener('click', e => {
+  const pill = e.target.closest('.cat-pill'); if (!pill) return;
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  renderProducts(pill.dataset.cat);
+});
+
+document.getElementById('cartBtn').addEventListener('click', openCart);
+document.getElementById('loginBtn').addEventListener('click', () => openModal('authModal'));
+document.getElementById('dealerNav').addEventListener('click', () => { openModal('authModal'); switchTab('register'); });
+document.getElementById('dealerFooter').addEventListener('click', () => { openModal('authModal'); switchTab('register'); });
+
+renderProducts('all');
 </script>
-
 </body>
 </html>
