@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CarryMe Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial;
+      margin: 0;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: black;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      padding: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .price {
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    button {
+      background: black;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .cart-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: black;
+      color: white;
+      padding: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    #cartBox {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      width: 260px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      border-radius: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>🛒 CarryMe Store</header>
+
+<!-- PRODUCTS -->
+<section>
+  <h2 style="padding:10px">🔥 Trending Products</h2>
+
+  <div class="grid">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1616627981467-0b3f9d2c0e6e" />
+      <h3>Premium Table Cover</h3>
+      <p>Stylish | Washable | Durable</p>
+      <div class="price">₹399</div>
+      <button onclick="addToCart('Table Cover',399)">Add to Cart</button>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c" />
+      <h3>Dining Table Mats (6 pcs)</h3>
+      <p>Luxury Design</p>
+      <div class="price">₹299</div>
+      <button onclick="addToCart('Table Mats',299)">Add to Cart</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- SIGNUP -->
+<div style="padding:15px;background:white;margin:10px;border-radius:10px">
+  <h3>Register</h3>
+
+  <input id="name" placeholder="Name">
+  <input id="phone" placeholder="Phone">
+
+  <select id="role">
+    <option>Customer</option>
+    <option>Retailer</option>
+    <option>Dealer</option>
+  </select>
+
+  <button onclick="registerUser()">Register</button>
+</div>
+
+<!-- CART BUTTON -->
+<div class="cart-btn" onclick="openCart()">
+🛒 <span id="cartCount">0</span>
+</div>
+
+<!-- CART BOX -->
+<div id="cartBox">
+  <h3>Cart</h3>
+
+  <div id="cartItems"></div>
+
+  <p>Total: <span id="cartTotal">₹0</span></p>
+
+  <p>Scan & Pay</p>
+  <img src="qr.png" width="150">
+
+  <button onclick="placeOrder()">I Have Paid</button>
+  <button onclick="closeCart()">Close</button>
+</div>
+
+<script>
+let cart = [];
+
+// ADD TO CART
+function addToCart(name, price){
+    cart.push({name, price});
+    updateCart();
+    alert(name + " added");
+}
+
+// UPDATE CART
+function updateCart(){
+    let total = 0;
+    let html = "";
+
+    cart.forEach(item => {
+        total += item.price;
+        html += "<p>"+item.name+" - ₹"+item.price+"</p>";
+    });
+
+    document.getElementById("cartItems").innerHTML = html;
+    document.getElementById("cartTotal").innerText = "₹" + total;
+    document.getElementById("cartCount").innerText = cart.length;
+}
+
+// OPEN / CLOSE
+function openCart(){
+    document.getElementById("cartBox").style.display = "block";
+}
+
+function closeCart(){
+    document.getElementById("cartBox").style.display = "none";
+}
+
+// PLACE ORDER
+function placeOrder(){
+    if(cart.length === 0){
+        alert("Cart empty");
+        return;
+    }
+
+    alert("Order Placed ✅");
+    cart = [];
+    updateCart();
+    closeCart();
+}
+
+// SIMPLE REGISTER
+function registerUser(){
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let role = document.getElementById("role").value;
+
+    if(!name || !phone){
+        alert("Fill details");
+        return;
+    }
+
+    localStorage.setItem("user", JSON.stringify({name, phone, role}));
+
+    alert("Registered as " + role);
+}
+</script>
+
+</body>
+</html>
