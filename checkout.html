@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<h2>Checkout</h2>
+
+<input type="text" id="name" placeholder="Name"><br><br>
+<input type="text" id="phone" placeholder="Phone"><br><br>
+
+<button onclick="payNow()">Pay Now</button>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let total = cart.reduce((sum, item) => sum + item.price, 0);
+
+function payNow(){
+  var options = {
+    "key": "YOUR_RAZORPAY_KEY",
+    "amount": total * 100,
+    "currency": "INR",
+    "name": "CarryMe",
+    "description": "Order Payment",
+    "handler": function (response){
+      alert("Payment Successful");
+
+      saveOrder(); // Firebase save
+      localStorage.removeItem("cart");
+      window.location.href = "/";
+    }
+  };
+
+  var rzp = new Razorpay(options);
+  rzp.open();
+}
+</script>
+
+</body>
+</html>
