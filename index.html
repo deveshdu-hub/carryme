@@ -5,93 +5,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CarryMe Store</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-
 <style>
 body {
-  margin:0;
-  font-family:'Nunito',sans-serif;
-  background:#fff8f0;
+    font-family: Arial;
+    margin: 0;
+    background: #f5f5f5;
 }
 
-/* HEADER */
 header {
-  background:#000;
-  color:#fff;
-  display:flex;
-  justify-content:space-between;
-  padding:15px 20px;
-}
-.logo {font-size:24px;font-weight:900;}
-.logo span {color:red;}
-
-/* HERO */
-.hero {
-  text-align:center;
-  padding:60px 20px;
-  background:#111;
-  color:#fff;
-}
-.hero h1 span {color:yellow;}
-
-.btn {
-  background:#25d366;
-  color:white;
-  padding:12px 20px;
-  text-decoration:none;
-  border-radius:30px;
-  display:inline-block;
-  margin-top:20px;
+    background: black;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
 }
 
-/* PRODUCTS */
 .products {
-  padding:30px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
+    padding: 10px;
 }
 
 .card {
-  background:#fff;
-  padding:15px;
-  border-radius:12px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.1);
-  transition:0.3s;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
 }
-.card:hover {transform:translateY(-5px);}
 
 .card img {
-  width:100%;
-  border-radius:10px;
+    width: 100%;
+    border-radius: 5px;
 }
 
-.card h3 {margin:10px 0 5px;}
-
 .price {
-  color:red;
-  font-weight:bold;
-  font-size:18px;
+    font-weight: bold;
+    margin: 5px 0;
 }
 
 button {
-  width:100%;
-  margin-top:10px;
-  background:#000;
-  color:#fff;
-  padding:10px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-button:hover {background:red;}
-
-/* FOOTER */
-footer {
-  text-align:center;
-  padding:20px;
-  background:#000;
-  color:#fff;
+    background: black;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
 }
 </style>
 </head>
@@ -99,134 +57,70 @@ footer {
 <body>
 
 <header>
-  <div class="logo">Carry<span>Me</span></div>
-  <div>India Outlet Store</div>
+    <h2>CarryMe</h2>
+    <button onclick="openCart()">🛒 Cart</button>
 </header>
 
-<section class="hero">
-  <h1>Factory Deals <span>₹99 T-Shirts</span></h1>
-  <p>Direct factory products. No middleman.</p>
-  <a class="btn" href="https://wa.me/919891011883">Order on WhatsApp</a>
-</section>
+<div class="products">
 
-<section class="products">
+<div class="card">
+<img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c">
+<h3>Table Cover</h3>
+<p>Premium quality</p>
+<div class="price">₹299</div>
+<button onclick="addToCart('Table Cover',299)">Add to Cart</button>
+</div>
 
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1583784561133-3c9c1c2d8f6c">
-    <h3>Bath Towel</h3>
-    <p>Soft cotton towel</p>
-    <div class="price">₹149</div>
-    <button onclick="order('Bath Towel')">Order</button>
-  </div>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1582582494700-6e9b2f5b9c3c">
+<h3>Sofa Cover</h3>
+<p>Stretchable washable</p>
+<div class="price">₹399</div>
+<button onclick="addToCart('Sofa Cover',399)">Add to Cart</button>
+</div>
 
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1603252109303-2751441dd157">
-    <h3>Face Towel Pack</h3>
-    <p>Pack of 3</p>
-    <div class="price">₹99</div>
-    <button onclick="order('Face Towel Pack')">Order</button>
-  </div>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952">
+<h3>Washing Machine Cover</h3>
+<p>Dustproof waterproof</p>
+<div class="price">₹249</div>
+<button onclick="addToCart('Washing Machine Cover',249)">Add to Cart</button>
+</div>
 
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1599058917765-a780eda07a3e">
-    <h3>Gym Towel</h3>
-    <p>Sports microfiber</p>
-    <div class="price">₹119</div>
-    <button onclick="order('Gym Towel')">Order</button>
-  </div>
+</div>
 
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b">
-    <h3>₹99 T-Shirt</h3>
-    <p>All sizes available</p>
-    <div class="price">₹99</div>
-    <button onclick="order('T-Shirt ₹99')">Order</button>
-  </div>
+<!-- CART BOX -->
+<div id="cartBox" style="display:none; position:fixed; bottom:0; left:0; right:0; background:#fff; padding:20px; box-shadow:0 -2px 10px rgba(0,0,0,0.3);">
+    
+    <h3>Your Cart</h3>
+    <div id="cartItems"></div>
+    
+    <h4>Total: ₹<span id="total">0</span></h4>
 
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1616628182507-7d3a5b9d3f31">
-    <h3>Table Cover</h3>
-    <p>Designer waterproof</p>
-    <div class="price">₹199</div>
-    <button onclick="order('Table Cover')">Order</button>
-  </div>
+    <hr>
 
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7">
-    <h3>Sofa Cover</h3>
-    <p>Stretchable washable</p>
-    <div class="price">₹399</div>
-     <button onclick="saveOrder('Table Cover',199)">
-  </div>
+    <h3>Scan & Pay</h3>
+    <img src="qr.png" width="200" style="display:block; margin:auto;">
 
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952">
-    <h3>Washing Machine Cover</h3>
-    <p>Dustproof waterproof</p>
-    <div class="price">₹249</div>
-    <button onclick="saveOrder('Washing Machine Cover',249)">
-  </div>
+    <p style="text-align:center;">UPI ID: devesh.du-1@okaxis</p>
 
-</section>
+    <button onclick="closeCart()" style="width:100%;">Close</button>
+</div>
 
-<footer>
-  CarryMe © 2026 | WhatsApp: +91 9891011883
-</footer>
-
-<script>
-function order(product){
-  let msg = encodeURIComponent("Hi, I want to order: " + product);
-  window.open("https://wa.me/919891011883?text=" + msg);
-}
-</script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-var admin = require("firebase-admin");
-
-var serviceAccount = require("path/to/serviceAccountKey.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
-
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyA7aXFJORBHTw5noD32RQS3kPB835GbkTc",
-    authDomain: "carryme-9bc5d.firebaseapp.com",
-    projectId: "carryme-9bc5d",
-    storageBucket: "carryme-9bc5d.firebasestorage.app",
-    messagingSenderId: "594580858279",
-    appId: "1:594580858279:web:827ddbb1bb0334d60c8282",
-    measurementId: "G-773WNVC79R"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
+  apiKey: "AIzaSyA7aXFJORBHTw5noD32RQS3kP",
   authDomain: "carryme-9bc5d.firebaseapp.com",
   projectId: "carryme-9bc5d",
-  storageBucket: "carryme-9bc5d.appspot.com",
-  messagingSenderId: "594580858279",
-  appId: "1:594580858279:web:xxxx",
 };
 
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
+</script>
+
+<!-- CART LOGIC -->
 <script>
 let cart = [];
 
@@ -252,12 +146,7 @@ function openCart(){
 function closeCart(){
     document.getElementById("cartBox").style.display = "none";
 }
-<script type="module">Firebase code</script>
+</script>
 
-<script>Cart code</script>
-
-</body>
-</html>
-  
 </body>
 </html>
