@@ -1,40 +1,563 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
-  <title>UPI Payment</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Track Your Order – CarryMe Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0F0D0B;
+    --cream: #FAF7F2;
+    --warm: #FFFDF9;
+    --gold: #C9973A;
+    --gold-lt: #F0D080;
+    --brown: #7C5C3E;
+    --rust: #C0522A;
+    --sage: #5A7A5E;
+    --muted: #8A8278;
+    --border: #E8E0D4;
+    --success: #3A7A52;
+    --pending: #B08030;
+    --transit: #2A5C8A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--ink); color: var(--cream); min-height: 100vh; overflow-x: hidden; }
+
+/* BG texture */
+body::before {
+content: ‘’; position: fixed; inset: 0; z-index: 0;
+background:
+radial-gradient(ellipse 80% 50% at 20% 20%, rgba(201,151,58,.07) 0%, transparent 60%),
+radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124,92,62,.08) 0%, transparent 60%);
+pointer-events: none;
+}
+
+/* HEADER */
+header {
+position: sticky; top: 0; z-index: 50;
+background: rgba(15,13,11,.85); backdrop-filter: blur(16px);
+border-bottom: 1px solid rgba(232,224,212,.1);
+}
+.hdr { max-width: 1100px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+.logo { font-family: ‘Playfair Display’, serif; font-size: 1.6rem; font-weight: 900; color: var(–cream); text-decoration: none; }
+.logo span { color: var(–gold); }
+.hdr-nav { display: flex; gap: 24px; }
+.hdr-nav a { color: rgba(250,247,242,.55); text-decoration: none; font-size: .88rem; font-weight: 500; transition: color .2s; }
+.hdr-nav a:hover { color: var(–gold); }
+.btn-back { background: rgba(201,151,58,.15); color: var(–gold); border: 1px solid rgba(201,151,58,.3); border-radius: 20px; padding: 8px 18px; font-family: ‘DM Sans’, sans-serif; font-size: .85rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: all .2s; }
+.btn-back:hover { background: rgba(201,151,58,.25); }
+
+/* HERO SEARCH */
+.hero { position: relative; z-index: 1; text-align: center; padding: 60px 24px 48px; }
+.hero-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(201,151,58,.12); border: 1px solid rgba(201,151,58,.25); border-radius: 24px; padding: 6px 16px; font-size: .78rem; font-weight: 600; color: var(–gold); letter-spacing: .8px; text-transform: uppercase; margin-bottom: 20px; }
+.hero h1 { font-family: ‘Playfair Display’, serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.1; margin-bottom: 14px; }
+.hero h1 em { font-style: normal; color: var(–gold); }
+.hero p { color: var(–muted); font-size: 1rem; margin-bottom: 36px; }
+
+/* SEARCH BOX */
+.search-box {
+display: flex; gap: 0; max-width: 540px; margin: 0 auto;
+background: rgba(250,247,242,.06); border: 1.5px solid rgba(232,224,212,.2);
+border-radius: 56px; overflow: hidden; padding: 6px 6px 6px 24px;
+transition: border-color .2s; box-shadow: 0 8px 32px rgba(0,0,0,.3);
+}
+.search-box:focus-within { border-color: var(–gold); }
+.search-box input { flex: 1; background: transparent; border: none; color: var(–cream); font-family: ‘DM Sans’, sans-serif; font-size: 1rem; outline: none; }
+.search-box input::placeholder { color: rgba(250,247,242,.3); }
+.search-box button { background: var(–gold); color: var(–ink); border: none; border-radius: 48px; padding: 12px 24px; font-family: ‘DM Sans’, sans-serif; font-size: .9rem; font-weight: 700; cursor: pointer; transition: background .2s; white-space: nowrap; }
+.search-box button:hover { background: var(–gold-lt); }
+.quick-ids { display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+.quick-ids span { font-size: .78rem; color: var(–muted); }
+.qid { background: rgba(250,247,242,.07); border: 1px solid rgba(232,224,212,.15); border-radius: 16px; padding: 5px 12px; font-size: .78rem; color: rgba(250,247,242,.55); cursor: pointer; transition: all .2s; }
+.qid:hover { border-color: var(–gold); color: var(–gold); }
+
+/* MAIN CONTENT */
+.main { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; position: relative; z-index: 1; }
+
+/* RESULT CARD */
+.result { display: none; animation: fadeUp .5s ease both; }
+.result.show { display: block; }
+
+/* ORDER HEADER */
+.order-head {
+background: rgba(250,247,242,.04); border: 1px solid rgba(232,224,212,.12);
+border-radius: 24px; padding: 28px 32px; margin-bottom: 24px;
+display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;
+}
+.order-id-block h2 { font-family: ‘Playfair Display’, serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+.order-id-block p { color: var(–muted); font-size: .85rem; }
+.order-id-block p span { color: var(–gold); font-weight: 600; }
+.order-status-pill {
+padding: 10px 22px; border-radius: 32px; font-size: .88rem; font-weight: 700; letter-spacing: .3px;
+display: flex; align-items: center; gap: 8px;
+}
+.status-transit { background: rgba(42,92,138,.2); border: 1px solid rgba(42,92,138,.4); color: #7ABAEF; }
+.status-delivered { background: rgba(58,122,82,.2); border: 1px solid rgba(58,122,82,.4); color: #7AEA9A; }
+.status-pending { background: rgba(176,128,48,.2); border: 1px solid rgba(176,128,48,.4); color: #EAC870; }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 1.5s ease infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+
+/* GRID LAYOUT */
+.track-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
+
+/* TIMELINE */
+.timeline-card {
+background: rgba(250,247,242,.04); border: 1px solid rgba(232,224,212,.12);
+border-radius: 24px; padding: 28px 32px;
+}
+.timeline-card h3 { font-family: ‘Playfair Display’, serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 28px; display: flex; align-items: center; gap: 10px; }
+.timeline { position: relative; }
+.timeline::before { content: ‘’; position: absolute; left: 19px; top: 24px; bottom: 24px; width: 2px; background: rgba(232,224,212,.1); }
+.t-item { display: flex; gap: 20px; margin-bottom: 32px; position: relative; }
+.t-item:last-child { margin-bottom: 0; }
+.t-dot {
+width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; position: relative; z-index: 1;
+display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+border: 2px solid transparent; transition: all .3s;
+}
+.t-dot.done { background: rgba(201,151,58,.15); border-color: var(–gold); }
+.t-dot.active { background: rgba(42,92,138,.2); border-color: #7ABAEF; box-shadow: 0 0 0 6px rgba(42,92,138,.12); }
+.t-dot.pending { background: rgba(232,224,212,.05); border-color: rgba(232,224,212,.15); }
+.t-body { flex: 1; padding-top: 6px; }
+.t-body strong { display: block; font-size: .95rem; font-weight: 600; color: var(–cream); margin-bottom: 3px; }
+.t-body .t-body-pending { color: var(–muted); }
+.t-body p { font-size: .82rem; color: var(–muted); line-height: 1.5; margin-bottom: 4px; }
+.t-time { font-size: .75rem; color: rgba(250,247,242,.3); display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+
+/* MAP CARD */
+.map-card {
+background: rgba(250,247,242,.04); border: 1px solid rgba(232,224,212,.12);
+border-radius: 20px; overflow: hidden; margin-top: 0;
+}
+.map-visual {
+height: 220px; background: rgba(20,30,20,.6);
+position: relative; overflow: hidden;
+display: flex; align-items: center; justify-content: center;
+}
+/* Animated map grid */
+.map-visual::before {
+content: ‘’; position: absolute; inset: 0;
+background-image: linear-gradient(rgba(90,122,94,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(90,122,94,.15) 1px, transparent 1px);
+background-size: 32px 32px;
+}
+.map-route {
+position: absolute; width: 80%; height: 60%;
+}
+.map-route svg { width: 100%; height: 100%; }
+.map-pin { position: absolute; font-size: 1.8rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,.5)); }
+.pin-from { bottom: 20%; left: 12%; animation: bobPin 2s ease infinite; }
+.pin-to { top: 18%; right: 10%; }
+.pin-truck { font-size: 1.4rem; animation: moveTruck 4s ease-in-out infinite; position: absolute; }
+@keyframes bobPin { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+@keyframes moveTruck { 0%{left:18%;top:65%} 50%{left:52%;top:40%} 100%{left:72%;top:25%} }
+.map-label {
+position: absolute; bottom: 0; left: 0; right: 0;
+background: linear-gradient(transparent, rgba(10,14,10,.9)); padding: 16px;
+display: flex; justify-content: space-between; align-items: flex-end;
+}
+.map-city strong { color: #fff; font-size: .82rem; font-weight: 600; display: block; }
+.map-city span { color: rgba(255,255,255,.45); font-size: .72rem; }
+.map-eta {
+background: var(–gold); color: var(–ink); border-radius: 12px; padding: 6px 12px; text-align: center;
+}
+.map-eta strong { font-size: .9rem; font-weight: 800; display: block; }
+.map-eta span { font-size: .7rem; font-weight: 600; }
+
+/* SIDEBAR CARDS */
+.side-cards { display: flex; flex-direction: column; gap: 20px; }
+
+.info-card {
+background: rgba(250,247,242,.04); border: 1px solid rgba(232,224,212,.12);
+border-radius: 20px; padding: 22px 24px;
+}
+.info-card h4 { font-size: .8rem; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; color: var(–muted); margin-bottom: 16px; }
+
+/* ORDER ITEMS */
+.order-item { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+.order-item:last-child { margin-bottom: 0; }
+.order-item img { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; flex-shrink: 0; border: 1px solid rgba(232,224,212,.1); }
+.oi-info strong { display: block; font-size: .88rem; font-weight: 600; margin-bottom: 2px; }
+.oi-info span { font-size: .78rem; color: var(–muted); }
+.oi-price { margin-left: auto; font-size: .9rem; font-weight: 700; color: var(–gold); flex-shrink: 0; }
+
+.divider { border: none; border-top: 1px solid rgba(232,224,212,.1); margin: 14px 0; }
+
+.price-row { display: flex; justify-content: space-between; font-size: .85rem; margin-bottom: 8px; }
+.price-row span { color: var(–muted); }
+.price-row strong { color: var(–cream); }
+.price-total { display: flex; justify-content: space-between; font-size: 1rem; font-weight: 700; margin-top: 4px; }
+.price-total strong { color: var(–gold); }
+
+/* DELIVERY DETAILS */
+.detail-row { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+.detail-row:last-child { margin-bottom: 0; }
+.detail-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(201,151,58,.1); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.detail-row strong { display: block; font-size: .82rem; font-weight: 600; color: var(–cream); margin-bottom: 2px; }
+.detail-row span { font-size: .78rem; color: var(–muted); line-height: 1.5; }
+
+/* HELP CARD */
+.help-card { background: linear-gradient(135deg, rgba(201,151,58,.12), rgba(124,92,62,.1)); border: 1px solid rgba(201,151,58,.2); border-radius: 20px; padding: 22px 24px; text-align: center; }
+.help-card h4 { font-family: ‘Playfair Display’, serif; font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.help-card p { font-size: .82rem; color: var(–muted); margin-bottom: 16px; line-height: 1.6; }
+.help-btns { display: flex; gap: 8px; justify-content: center; }
+.btn-wa { background: #25D366; color: #fff; border: none; border-radius: 20px; padding: 9px 16px; font-size: .82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.btn-call { background: rgba(250,247,242,.08); color: var(–cream); border: 1px solid rgba(232,224,212,.2); border-radius: 20px; padding: 9px 16px; font-size: .82rem; font-weight: 600; cursor: pointer; }
+
+/* EMPTY STATE */
+.empty { text-align: center; padding: 60px 24px; display: none; animation: fadeUp .4s ease both; }
+.empty.show { display: block; }
+.empty-icon { font-size: 4rem; margin-bottom: 16px; opacity: .5; }
+.empty h3 { font-family: ‘Playfair Display’, serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+.empty p { color: var(–muted); font-size: .9rem; }
+
+/* RECENT ORDERS */
+.recent { margin-top: 60px; }
+.recent h2 { font-family: ‘Playfair Display’, serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; }
+.recent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.recent-card {
+background: rgba(250,247,242,.04); border: 1px solid rgba(232,224,212,.12);
+border-radius: 18px; padding: 20px; cursor: pointer; transition: all .25s;
+}
+.recent-card:hover { border-color: rgba(201,151,58,.3); background: rgba(201,151,58,.05); transform: translateY(-2px); }
+.rc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.rc-id { font-size: .8rem; font-weight: 700; color: var(–gold); }
+.rc-badge { font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; }
+.rc-badge.delivered { background: rgba(58,122,82,.2); color: #7AEA9A; }
+.rc-badge.transit { background: rgba(42,92,138,.2); color: #7ABAEF; }
+.rc-badge.pending { background: rgba(176,128,48,.2); color: #EAC870; }
+.rc-items { font-size: .85rem; color: var(–cream); font-weight: 500; margin-bottom: 4px; }
+.rc-meta { font-size: .78rem; color: var(–muted); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+@media (max-width: 860px) {
+.track-grid { grid-template-columns: 1fr; }
+.recent-grid { grid-template-columns: 1fr 1fr; }
+.order-head { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 520px) {
+.recent-grid { grid-template-columns: 1fr; }
+.timeline-card, .info-card, .help-card { padding: 20px; }
+}
+</style>
+
 </head>
-<body style="text-align:center; font-family:sans-serif;">
+<body>
 
-<h2>Complete Payment</h2>
+<header>
+  <div class="hdr">
+    <a href="#" class="logo">Carry<span>Me</span></a>
+    <nav class="hdr-nav">
+      <a href="#">Home</a>
+      <a href="#">My Orders</a>
+      <a href="#">Support</a>
+    </nav>
+    <a href="#" class="btn-back">← Back to Shop</a>
+  </div>
+</header>
 
-<h3>Total: ₹<span id="total"></span></h3>
+<!-- HERO SEARCH -->
 
-<p>Scan QR to Pay</p>
+<div class="hero">
+  <div class="hero-tag">📦 Live Tracking</div>
+  <h1>Where's Your <em>Order?</em></h1>
+  <p>Enter your order ID or phone number to track your package in real time.</p>
+  <div class="search-box">
+    <input type="text" id="trackInput" placeholder="Order ID (e.g. CM-2025-4821) or phone number…" />
+    <button onclick="trackOrder()">Track Now</button>
+  </div>
+  <div class="quick-ids">
+    <span>Try:</span>
+    <div class="qid" onclick="fillAndTrack('CM-2025-4821')">CM-2025-4821</div>
+    <div class="qid" onclick="fillAndTrack('CM-2025-3104')">CM-2025-3104</div>
+    <div class="qid" onclick="fillAndTrack('CM-2025-1987')">CM-2025-1987</div>
+  </div>
+</div>
 
-<img src="qr.png" width="220"><br><br>
+<div class="main">
 
-<p><b>UPI ID:</b> devesh.du-1@okaxis</p>
+  <!-- EMPTY STATE -->
 
-<a href="upi://pay?pa=devesh.du-1@okaxis&pn=CarryMe&cu=INR">
-  <button style="padding:10px 20px;">Pay via UPI App</button>
-</a>
+  <div class="empty" id="emptyState">
+    <div class="empty-icon">🔍</div>
+    <h3>Order Not Found</h3>
+    <p>We couldn't find an order matching that ID.<br>Please check and try again, or contact support.</p>
+  </div>
 
-<br><br>
+  <!-- RESULT -->
 
-<input type="text" id="name" placeholder="Name"><br><br>
-<input type="text" id="phone" placeholder="Phone"><br><br>
+  <div class="result" id="resultBlock">
 
-<p style="color:red;">
-After payment, click below button 👇
-</p>
+```
+<div class="order-head" id="orderHead"></div>
 
-<button onclick="paid()" style="padding:10px 20px; background:green; color:white;">
-I Have Paid
-</button>
+<div class="track-grid">
+  <!-- LEFT: Timeline + Map -->
+  <div>
+    <div class="timeline-card" style="margin-bottom:24px">
+      <h3>📍 Shipment Journey</h3>
+      <div class="timeline" id="timeline"></div>
+    </div>
+    <div class="map-card">
+      <div class="map-visual">
+        <div class="map-route">
+          <svg viewBox="0 0 400 200" fill="none">
+            <path d="M60 160 C120 140, 160 100, 220 80 C280 60, 320 50, 360 40" stroke="rgba(201,151,58,.4)" stroke-width="2" stroke-dasharray="6 4" />
+            <path id="progressPath" d="M60 160 C120 140, 160 100, 220 80" stroke="var(--gold)" stroke-width="2.5" />
+          </svg>
+        </div>
+        <span class="map-pin pin-from">🏭</span>
+        <span class="map-pin pin-to">🏠</span>
+        <span class="map-pin pin-truck" id="truckPin">🚚</span>
+        <div class="map-label">
+          <div class="map-city" id="fromCity"></div>
+          <div class="map-eta" id="etaBadge"></div>
+          <div class="map-city" id="toCity" style="text-align:right"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Sidebar -->
+  <div class="side-cards">
+
+    <div class="info-card" id="itemsCard">
+      <h4>🛍 Order Items</h4>
+      <div id="orderItems"></div>
+      <hr class="divider" />
+      <div id="orderPricing"></div>
+    </div>
+
+    <div class="info-card" id="deliveryCard">
+      <h4>📋 Delivery Details</h4>
+      <div id="deliveryDetails"></div>
+    </div>
+
+    <div class="help-card">
+      <h4>Need Help?</h4>
+      <p>Our support team is available Mon–Sat, 9am–7pm for any queries about your order.</p>
+      <div class="help-btns">
+        <button class="btn-wa" onclick="showToast('Opening WhatsApp…')">💬 WhatsApp</button>
+        <button class="btn-call" onclick="showToast('Calling support…')">📞 Call Us</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- RECENT ORDERS -->
+
+  <div class="recent">
+    <h2>Recent Orders</h2>
+    <div class="recent-grid" id="recentGrid"></div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+
+<div id="toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(201,151,58,.95);color:#0F0D0B;border-radius:32px;padding:12px 24px;font-size:.9rem;font-weight:700;z-index:999;opacity:0;pointer-events:none;transition:all .35s;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.3)"></div>
 
 <script>
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let total = cart.reduce((sum, item) => sum + item.price, 0);
+const ORDERS = {
+  'CM-2025-4821': {
+    status: 'transit',
+    statusLabel: 'Out for Delivery',
+    date: '25 Apr 2025',
+    eta: 'Today by 7 PM',
+    etaShort: 'Today',
+    carrier: 'Delhivery Express',
+    awb: 'DL-9982341',
+    from: { city: 'Mumbai Warehouse', state: 'Maharashtra' },
+    to: { city: 'Pune', state: 'Maharashtra' },
+    customer: 'Priya Sharma',
+    address: '12A, Rose Garden Society, Kothrud, Pune – 411038',
+    phone: '98765 XXXXX',
+    payment: 'UPI · Paid',
+    items: [
+      { name: 'Premium Table Cover', qty: 1, price: 399, img: 'https://images.unsplash.com/photo-1616627981467-0b3f9d2c0e6e?w=100&q=80' },
+      { name: 'Dining Table Mats (6 pcs)', qty: 1, price: 299, img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=100&q=80' }
+    ],
+    timeline: [
+      { icon: '✅', label: 'Order Placed', detail: 'Your order was confirmed', time: '23 Apr · 10:42 AM', done: true },
+      { icon: '📦', label: 'Packed & Dispatched', detail: 'Handed over to Delhivery Express', time: '24 Apr · 2:15 PM', done: true },
+      { icon: '🏙️', label: 'Reached Pune Hub', detail: 'Package arrived at local delivery hub', time: '25 Apr · 6:00 AM', done: true },
+      { icon: '🚚', label: 'Out for Delivery', detail: 'Your delivery agent is on the way', time: '25 Apr · 9:30 AM', active: true },
+      { icon: '🏠', label: 'Delivered', detail: 'Awaiting delivery at your address', time: 'Expected today', pending: true }
+    ]
+  },
+  'CM-2025-3104': {
+    status: 'delivered',
+    statusLabel: 'Delivered',
+    date: '18 Apr 2025',
+    eta: 'Delivered on 20 Apr',
+    etaShort: '20 Apr',
+    carrier: 'Bluedart',
+    awb: 'BD-7712098',
+    from: { city: 'Delhi Warehouse', state: 'NCR' },
+    to: { city: 'Bengaluru', state: 'Karnataka' },
+    customer: 'Ananya Patel',
+    address: '45, Indiranagar 12th Main, Bengaluru – 560008',
+    phone: '91234 XXXXX',
+    payment: 'Credit Card · Paid',
+    items: [
+      { name: 'Waterproof PVC Cover', qty: 1, price: 499, img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=100&q=80' }
+    ],
+    timeline: [
+      { icon: '✅', label: 'Order Placed', detail: 'Order confirmed successfully', time: '18 Apr · 3:00 PM', done: true },
+      { icon: '📦', label: 'Packed & Dispatched', detail: 'Shipped via Bluedart', time: '19 Apr · 11:00 AM', done: true },
+      { icon: '✈️', label: 'In Transit', detail: 'Package in transit to Bengaluru', time: '19 Apr · 8:00 PM', done: true },
+      { icon: '🏙️', label: 'Reached City Hub', detail: 'Arrived at Bengaluru delivery centre', time: '20 Apr · 7:00 AM', done: true },
+      { icon: '🏠', label: 'Delivered', detail: 'Package delivered. Enjoy your purchase!', time: '20 Apr · 1:45 PM', done: true }
+    ]
+  },
+  'CM-2025-1987': {
+    status: 'pending',
+    statusLabel: 'Processing',
+    date: '27 Apr 2025',
+    eta: 'Expected 30 Apr',
+    etaShort: '30 Apr',
+    carrier: 'Ecom Express',
+    awb: 'Assigned after dispatch',
+    from: { city: 'Chennai Warehouse', state: 'Tamil Nadu' },
+    to: { city: 'Hyderabad', state: 'Telangana' },
+    customer: 'Rajan Mehta',
+    address: '8B, Jubilee Hills Road No. 10, Hyderabad – 500033',
+    phone: '99887 XXXXX',
+    payment: 'Cash on Delivery',
+    items: [
+      { name: 'Classic Cotton Cover', qty: 2, price: 898, img: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=100&q=80' },
+      { name: 'Boho Woven Mat Set', qty: 1, price: 379, img: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&q=80' }
+    ],
+    timeline: [
+      { icon: '✅', label: 'Order Placed', detail: 'Order received & being processed', time: '27 Apr · 5:10 PM', done: true },
+      { icon: '📦', label: 'Packing', detail: 'Your items are being prepared', time: 'In progress', active: true },
+      { icon: '🚚', label: 'Dispatched', detail: 'Will be handed over to courier', time: 'Expected 28 Apr', pending: true },
+      { icon: '🏙️', label: 'In Transit', detail: 'On the way to your city', time: 'Expected 29 Apr', pending: true },
+      { icon: '🏠', label: 'Delivered', detail: 'Awaiting delivery', time: 'Expected 30 Apr', pending: true }
+    ]
+  }
+};
 
-document.getElementById("total").innerText = total;
+const RECENT = [
+  { id: 'CM-2025-4821', items: 'Table Cover + Mats', date: '25 Apr 2025', status: 'transit', amount: '₹698' },
+  { id: 'CM-2025-3104', items: 'Waterproof PVC Cover', date: '18 Apr 2025', status: 'delivered', amount: '₹499' },
+  { id: 'CM-2025-1987', items: '2× Cotton Cover + Mats', date: '27 Apr 2025', status: 'pending', amount: '₹1,277' },
+];
+
+function fillAndTrack(id) {
+  document.getElementById('trackInput').value = id;
+  trackOrder();
+}
+
+function trackOrder() {
+  const val = document.getElementById('trackInput').value.trim().toUpperCase();
+  const order = ORDERS[val] || ORDERS[Object.keys(ORDERS).find(k => k === val)];
+  document.getElementById('resultBlock').classList.remove('show');
+  document.getElementById('emptyState').classList.remove('show');
+  if (!order) { document.getElementById('emptyState').classList.add('show'); return; }
+  renderOrder(order, val);
+  document.getElementById('resultBlock').classList.add('show');
+  document.getElementById('resultBlock').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderOrder(o, id) {
+  // Head
+  const statusClass = { transit: 'status-transit', delivered: 'status-delivered', pending: 'status-pending' }[o.status];
+  document.getElementById('orderHead').innerHTML = `
+    <div class="order-id-block">
+      <h2>Order <span style="color:var(--gold)">${id}</span></h2>
+      <p>Placed on ${o.date} &nbsp;·&nbsp; Carrier: <span>${o.carrier}</span> &nbsp;·&nbsp; AWB: <span>${o.awb}</span></p>
+    </div>
+    <div class="order-status-pill ${statusClass}"><span class="pulse"></span>${o.statusLabel}</div>
+  `;
+
+  // Timeline
+  document.getElementById('timeline').innerHTML = o.timeline.map(t => `
+    <div class="t-item">
+      <div class="t-dot ${t.done ? 'done' : t.active ? 'active' : 'pending'}">${t.icon}</div>
+      <div class="t-body">
+        <strong class="${t.pending && !t.active ? 't-body-pending' : ''}">${t.label}</strong>
+        <p>${t.detail}</p>
+        <div class="t-time">🕐 ${t.time}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // Map
+  document.getElementById('fromCity').innerHTML = `<strong>${o.from.city}</strong><span>${o.from.state}</span>`;
+  document.getElementById('toCity').innerHTML = `<strong>${o.to.city}</strong><span>${o.to.state}</span>`;
+  document.getElementById('etaBadge').innerHTML = `<strong>${o.etaShort}</strong><span>Est. Delivery</span>`;
+  if (o.status === 'delivered') {
+    document.getElementById('truckPin').style.left = '72%';
+    document.getElementById('truckPin').style.top = '25%';
+    document.getElementById('truckPin').textContent = '✅';
+  }
+
+  // Items
+  const subtotal = o.items.reduce((s, i) => s + i.price, 0);
+  const delivery = subtotal >= 499 ? 0 : 49;
+  document.getElementById('orderItems').innerHTML = o.items.map(i => `
+    <div class="order-item">
+      <img src="${i.img}" alt="${i.name}" />
+      <div class="oi-info"><strong>${i.name}</strong><span>Qty: ${i.qty}</span></div>
+      <div class="oi-price">₹${i.price}</div>
+    </div>
+  `).join('');
+  document.getElementById('orderPricing').innerHTML = `
+    <div class="price-row"><span>Subtotal</span><strong>₹${subtotal}</strong></div>
+    <div class="price-row"><span>Delivery</span><strong>${delivery === 0 ? 'Free 🎉' : '₹' + delivery}</strong></div>
+    <div class="price-total"><span>Total</span><strong>₹${subtotal + delivery}</strong></div>
+  `;
+
+  // Delivery details
+  document.getElementById('deliveryDetails').innerHTML = `
+    <div class="detail-row">
+      <div class="detail-icon">👤</div>
+      <div><strong>${o.customer}</strong><span>${o.phone}</span></div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-icon">📍</div>
+      <div><strong>Delivery Address</strong><span>${o.address}</span></div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-icon">💳</div>
+      <div><strong>Payment</strong><span>${o.payment}</span></div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-icon">📅</div>
+      <div><strong>Expected Delivery</strong><span>${o.eta}</span></div>
+    </div>
+  `;
+}
+
+// Recent Orders
+document.getElementById('recentGrid').innerHTML = RECENT.map(r => `
+  <div class="recent-card" onclick="fillAndTrack('${r.id}')">
+    <div class="rc-top">
+      <div class="rc-id">${r.id}</div>
+      <div class="rc-badge ${r.status}">${r.status === 'transit' ? 'Out for Delivery' : r.status === 'delivered' ? 'Delivered' : 'Processing'}</div>
+    </div>
+    <div class="rc-items">${r.items}</div>
+    <div class="rc-meta">${r.date} &nbsp;·&nbsp; ${r.amount}</div>
+  </div>
+`).join('');
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 3000);
+}
+
+// Auto-load first on page open
+setTimeout(() => fillAndTrack('CM-2025-4821'), 300);
 </script>
+
+</body>
+</html>
