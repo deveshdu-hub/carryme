@@ -214,10 +214,50 @@ admin.initializeApp({
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
-</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
-  alert("Order Saved!");
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "carryme-9bc5d.firebaseapp.com",
+  projectId: "carryme-9bc5d",
+  storageBucket: "carryme-9bc5d.appspot.com",
+  messagingSenderId: "594580858279",
+  appId: "1:594580858279:web:xxxx",
+};
+
+const app = initializeApp(firebaseConfig);
+<script>
+let cart = [];
+
+function addToCart(name, price){
+    cart.push({name, price});
+    alert(name + " added to cart");
 }
-</script>
+
+function openCart(){
+    let total = 0;
+    let items = "";
+
+    cart.forEach(item => {
+        total += item.price;
+        items += `<p>${item.name} - ₹${item.price}</p>`;
+    });
+
+    document.getElementById("cartItems").innerHTML = items;
+    document.getElementById("total").innerText = total;
+    document.getElementById("cartBox").style.display = "block";
+}
+
+function closeCart(){
+    document.getElementById("cartBox").style.display = "none";
+}
+<script type="module">Firebase code</script>
+
+<script>Cart code</script>
+
+</body>
+</html>
+  
 </body>
 </html>
