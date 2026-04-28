@@ -823,6 +823,7 @@ max-height: 75vh; overflow-y: auto;
     <div class="cart-total-row"><span>Delivery</span><strong id="cartDelivery">Free</strong></div>
     <div class="cart-grand"><span>Total</span><strong id="cartTotal">₹0</strong></div>
     <button class="btn-checkout" onclick="showCheckout()">Proceed to Checkout</button>
+    <button class="btn-continue" style="background:#25D366;color:#fff;border-color:#25D366;margin-top:8px" onclick="openWACart()">💬 Order via WhatsApp</button>
     <button class="btn-continue" onclick="closeCart()">Continue Shopping</button>
   </div>
 </div>
@@ -922,7 +923,7 @@ max-height: 75vh; overflow-y: auto;
 
 <!-- WHATSAPP BUTTON -->
 
-<div class="wa-tooltip" id="waTooltip">💬 Chat with us on WhatsApp</div>
+<div class="wa-tooltip" id="waTooltip">💬 Chat: +91 95551 28890</div>
 <button class="wa-btn" id="waBtn" onclick="openWA()">💬</button>
 
 <!-- STICKY MOBILE CTA -->
@@ -953,6 +954,141 @@ max-height: 75vh; overflow-y: auto;
 <!-- TOAST -->
 
 <div class="toast" id="toast"></div>
+
+<!-- ── VISITOR SOCIAL PROOF POP ── -->
+
+<div id="visitorPop" style="
+  position:fixed;bottom:90px;left:20px;z-index:350;
+  background:var(--warm-white);border:1px solid var(--border);border-radius:16px;
+  padding:12px 16px;display:flex;align-items:center;gap:10px;
+  box-shadow:0 4px 24px rgba(26,24,20,.15);max-width:220px;
+  transform:translateX(-120%);transition:transform .4s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;
+"></div>
+<style>
+  #visitorPop.show { transform: translateX(0) !important; }
+
+/* ── ANALYTICS PANEL ── */
+.anl-overlay { position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:450;opacity:0;pointer-events:none;transition:opacity .3s; }
+.anl-overlay.open { opacity:1;pointer-events:all; }
+.anl-panel {
+position:fixed;top:0;right:0;bottom:0;width:min(780px,100vw);z-index:451;
+background:var(–cream);transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);
+display:flex;flex-direction:column;box-shadow:-8px 0 48px rgba(0,0,0,.2);
+overflow:hidden;
+}
+.anl-panel.open { transform:translateX(0); }
+.anl-head {
+background:var(–charcoal);padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.anl-head h2 { font-family:‘Playfair Display’,serif;font-size:1.2rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:10px; }
+.anl-live-dot { width:10px;height:10px;border-radius:50%;background:#3A7A52;animation:pulse 1.5s ease infinite; }
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.anl-close { background:rgba(255,255,255,.1);border:none;color:#fff;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center; }
+.anl-body { flex:1;overflow-y:auto;padding:24px 28px;display:flex;flex-direction:column;gap:20px; }
+
+/* Stat cards row */
+.anl-stats { display:grid;grid-template-columns:repeat(4,1fr);gap:12px; }
+.anl-stat {
+background:var(–warm-white);border:1px solid var(–border);border-radius:16px;padding:16px;text-align:center;
+}
+.anl-stat .val { font-family:‘Playfair Display’,serif;font-size:1.8rem;font-weight:900;color:var(–charcoal);display:block; }
+.anl-stat .lbl { font-size:.72rem;color:var(–muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;display:block; }
+.anl-stat.highlight .val { color:var(–gold); }
+
+/* Cards */
+.anl-card { background:var(–warm-white);border:1px solid var(–border);border-radius:18px;overflow:hidden; }
+.anl-card-head { padding:14px 18px;border-bottom:1px solid var(–border);display:flex;align-items:center;justify-content:space-between; }
+.anl-card-head h3 { font-size:.88rem;font-weight:700;color:var(–charcoal); }
+.anl-card-head span { font-size:.75rem;color:var(–muted); }
+.anl-card-body { padding:16px 18px; }
+
+.anl-grid2 { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+
+/* Visitor table */
+.anl-table { width:100%;border-collapse:collapse; }
+.anl-table th { text-align:left;padding:8px 10px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(–muted);background:var(–cream); }
+.anl-table tr:hover td { background:#FAF7F2; }
+
+@media(max-width:600px){
+.anl-stats{grid-template-columns:repeat(2,1fr)}
+.anl-grid2{grid-template-columns:1fr}
+.anl-body{padding:16px}
+}
+</style>
+
+<!-- ── ANALYTICS OVERLAY + PANEL ── -->
+
+<div class="anl-overlay" id="analyticsOverlay" onclick="document.getElementById('analyticsPanel').classList.remove('open');this.classList.remove('open')"></div>
+<div class="anl-panel" id="analyticsPanel">
+  <div class="anl-head">
+    <h2><span class="anl-live-dot"></span> Live Visitor Analytics</h2>
+    <button class="anl-close" onclick="document.getElementById('analyticsPanel').classList.remove('open');document.getElementById('analyticsOverlay').classList.remove('open')">✕</button>
+  </div>
+  <div class="anl-body">
+
+```
+<!-- KPI row -->
+<div class="anl-stats">
+  <div class="anl-stat highlight">
+    <span class="val" id="anlActiveCount">0</span>
+    <span class="lbl">🟢 Active Now</span>
+  </div>
+  <div class="anl-stat">
+    <span class="val" id="anlTotalCount">0</span>
+    <span class="lbl">👁 Total Visitors</span>
+  </div>
+  <div class="anl-stat">
+    <span class="val" id="anlCartCount">0</span>
+    <span class="lbl">🛒 In Cart</span>
+  </div>
+  <div class="anl-stat">
+    <span class="val" id="anlMobileCount">0%</span>
+    <span class="lbl">📱 Mobile</span>
+  </div>
+</div>
+
+<!-- Live table -->
+<div class="anl-card">
+  <div class="anl-card-head">
+    <h3>👥 Live Visitors</h3>
+    <span>Updates every 4s &nbsp;·&nbsp; Session: <strong id="anlSession">00:00</strong></span>
+  </div>
+  <div style="overflow-x:auto">
+    <table class="anl-table">
+      <thead><tr><th>City</th><th>Device</th><th>Source</th><th>Viewing</th><th>When</th><th>Cart</th></tr></thead>
+      <tbody id="anlVisitorTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="anl-grid2">
+  <!-- Traffic Sources -->
+  <div class="anl-card">
+    <div class="anl-card-head"><h3>📊 Traffic Sources</h3><span>Where they come from</span></div>
+    <div class="anl-card-body" id="anlSources"></div>
+  </div>
+
+  <!-- Top Cities -->
+  <div class="anl-card">
+    <div class="anl-card-head"><h3>📍 Top Cities</h3><span>Visitor locations</span></div>
+    <div class="anl-card-body" id="anlCities"></div>
+  </div>
+</div>
+
+<!-- Top Pages -->
+<div class="anl-card">
+  <div class="anl-card-head"><h3>📄 Most Viewed Pages</h3><span>What customers browse</span></div>
+  <div class="anl-card-body" id="anlPages"></div>
+</div>
+
+<div style="text-align:center;padding:8px;font-size:.78rem;color:var(--muted)">
+  💡 Tap the <strong>"👁 people viewing"</strong> badge on the homepage to open this panel anytime
+</div>
+```
+
+  </div>
+</div>
 
 <script>
 const products = [
@@ -1262,6 +1398,150 @@ document.querySelector('.logo').addEventListener('click', e => {
 
 // ── Seed a demo lead after 3s ──
 setTimeout(() => saveLead('Demo Visitor', '+91 98765 00001', 'nl'), 3000);
+
+/* ══════════════════════════════════════
+   👁 LIVE VISITOR ANALYTICS ENGINE
+══════════════════════════════════════ */
+
+const CITIES = ['Mumbai','Delhi','Pune','Bengaluru','Hyderabad','Noida','Jaipur','Chennai','Ahmedabad','Surat','Lucknow','Indore','Bhopal','Nagpur','Kolkata'];
+const DEVICES = ['📱 Mobile','💻 Desktop','📱 Mobile','📱 Mobile','💻 Desktop','📟 Tablet'];
+const SOURCES = ['🔍 Google','📘 Facebook','📷 Instagram','💬 WhatsApp','🔗 Direct','🔍 Google','🔍 Google'];
+const PAGES = ['🏠 Home','🛍 Table Covers','🛁 Towels','🍽 Dining Mats','📦 Cart','🏷 Offers','🔍 Searching...'];
+const NAMES = ['User','Visitor','Shopper','Customer','Guest'];
+
+let visitors = [];
+let visitorId = 1;
+let sessionStart = Date.now();
+
+function getRandItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function timeAgo(ts) {
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60) return s + 's ago';
+  if (s < 3600) return Math.floor(s/60) + 'm ago';
+  return Math.floor(s/3600) + 'h ago';
+}
+
+function addVisitor() {
+  const v = {
+    id: visitorId++,
+    city: getRandItem(CITIES),
+    device: getRandItem(DEVICES),
+    source: getRandItem(SOURCES),
+    page: getRandItem(PAGES),
+    ts: Date.now() - Math.floor(Math.random() * 300000),
+    active: Math.random() > 0.3,
+    cartItems: Math.random() > 0.65 ? Math.floor(Math.random() * 3) + 1 : 0,
+    timeOnSite: Math.floor(Math.random() * 600) + 30,
+  };
+  visitors.unshift(v);
+  if (visitors.length > 24) visitors.pop();
+  updateAnalytics();
+  if (v.active) showVisitorToast(v);
+}
+
+function showVisitorToast(v) {
+  // Small social proof popup bottom-left
+  const el = document.getElementById('visitorPop');
+  el.innerHTML = `<span style="font-size:1.4rem">${v.device.split(' ')[0]}</span>
+    <div><strong style="font-size:.85rem">${v.city}</strong>
+    <div style="font-size:.75rem;color:var(--muted)">viewing ${v.page.replace(/^[^ ]+ /,'')}</div></div>`;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+function updateAnalytics() {
+  const active = visitors.filter(v => v.active).length;
+  const withCart = visitors.filter(v => v.cartItems > 0).length;
+  const mobile = visitors.filter(v => v.device.includes('Mobile')).length;
+
+  // Update header badges
+  document.getElementById('liveCount').textContent = active;
+  document.getElementById('anlActiveCount').textContent = active;
+  document.getElementById('anlTotalCount').textContent = visitors.length;
+  document.getElementById('anlCartCount').textContent = withCart;
+  document.getElementById('anlMobileCount').textContent = Math.round(mobile / Math.max(visitors.length,1) * 100) + '%';
+
+  // Source breakdown
+  const srcMap = {};
+  visitors.forEach(v => { srcMap[v.source] = (srcMap[v.source]||0) + 1; });
+  const srcSorted = Object.entries(srcMap).sort((a,b) => b[1]-a[1]).slice(0,5);
+  const srcMax = srcSorted[0]?.[1] || 1;
+  document.getElementById('anlSources').innerHTML = srcSorted.map(([src, cnt]) => `
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:4px">
+        <span>${src}</span><span style="color:var(--gold);font-weight:700">${cnt}</span>
+      </div>
+      <div style="background:var(--border);border-radius:4px;height:6px">
+        <div style="background:var(--gold);border-radius:4px;height:6px;width:${Math.round(cnt/srcMax*100)}%;transition:width .5s"></div>
+      </div>
+    </div>`).join('');
+
+  // Page views
+  const pageMap = {};
+  visitors.forEach(v => { pageMap[v.page] = (pageMap[v.page]||0) + 1; });
+  const pageSorted = Object.entries(pageMap).sort((a,b) => b[1]-a[1]).slice(0,5);
+  document.getElementById('anlPages').innerHTML = pageSorted.map(([pg, cnt]) => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:.82rem">
+      <span>${pg}</span><span style="background:#FEF0D0;color:var(--brown);border-radius:10px;padding:2px 8px;font-weight:700;font-size:.75rem">${cnt}</span>
+    </div>`).join('');
+
+  // Live visitor table
+  document.getElementById('anlVisitorTable').innerHTML = visitors.slice(0,12).map(v => `
+    <tr>
+      <td style="padding:9px 10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="width:8px;height:8px;border-radius:50%;background:${v.active?'#3A7A52':'var(--border)'};flex-shrink:0;display:inline-block"></span>
+          <strong style="font-size:.82rem">${v.city}</strong>
+        </div>
+      </td>
+      <td style="padding:9px 10px;font-size:.8rem">${v.device}</td>
+      <td style="padding:9px 10px;font-size:.78rem;color:var(--muted)">${v.source}</td>
+      <td style="padding:9px 10px;font-size:.78rem">${v.page}</td>
+      <td style="padding:9px 10px;font-size:.75rem;color:var(--muted)">${timeAgo(v.ts)}</td>
+      <td style="padding:9px 10px">${v.cartItems > 0 ? `<span style="background:#FDE8E0;color:var(--rust);border-radius:10px;padding:2px 8px;font-size:.72rem;font-weight:700">🛒 ${v.cartItems}</span>` : '<span style="color:var(--border);font-size:.75rem">—</span>'}</td>
+    </tr>`).join('');
+
+  // City breakdown
+  const cityMap = {};
+  visitors.forEach(v => { cityMap[v.city] = (cityMap[v.city]||0)+1; });
+  const topCities = Object.entries(cityMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  document.getElementById('anlCities').innerHTML = topCities.map(([c,n]) => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:.82rem">
+      <span>📍 ${c}</span><span style="font-weight:700;color:var(--charcoal)">${n}</span>
+    </div>`).join('');
+
+  // Session time
+  const elapsed = Math.floor((Date.now() - sessionStart)/1000);
+  const mm = String(Math.floor(elapsed/60)).padStart(2,'0');
+  const ss = String(elapsed%60).padStart(2,'0');
+  document.getElementById('anlSession').textContent = mm+':'+ss;
+}
+
+// Seed initial visitors
+for (let i = 0; i < 18; i++) addVisitor();
+
+// Add new visitors periodically
+setInterval(() => { if (Math.random() > 0.45) addVisitor(); }, 4000);
+
+// Refresh time-ago labels
+setInterval(updateAnalytics, 10000);
+
+// Update session timer every second
+setInterval(() => {
+  const elapsed = Math.floor((Date.now() - sessionStart)/1000);
+  const mm = String(Math.floor(elapsed/60)).padStart(2,'0');
+  const ss = String(elapsed%60).padStart(2,'0');
+  const el = document.getElementById('anlSession');
+  if (el) el.textContent = mm+':'+ss;
+}, 1000);
+
+// Toggle analytics panel — click live badge
+document.querySelector('.live-badge').style.cursor = 'pointer';
+document.querySelector('.live-badge').addEventListener('click', () => {
+  document.getElementById('analyticsPanel').classList.toggle('open');
+  document.getElementById('analyticsOverlay').classList.toggle('open');
+  updateAnalytics();
+});
 </script>
 
 </body>
