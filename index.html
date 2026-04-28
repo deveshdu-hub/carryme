@@ -1,4 +1,4 @@
-<!DOCTYPE<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -694,6 +694,10 @@ max-height: 75vh; overflow-y: auto;
           Noida, Uttar Pradesh – 201301
         </p>
         <span class="gstin">GSTIN: 09DOHPD0171P1ZO</span>
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+          <a href="https://wa.me/919555128890?text=Hi%20CarryMe!%20I%20want%20to%20know%20more%20about%20your%20products." target="_blank" style="display:flex;align-items:center;gap:6px;background:#25D366;color:#fff;border-radius:20px;padding:7px 14px;font-size:.8rem;font-weight:700;text-decoration:none">💬 +91 95551 28890</a>
+          <a href="https://wa.me/919891011883?text=Hi%20CarryMe!%20I%20want%20to%20know%20more%20about%20your%20products." target="_blank" style="display:flex;align-items:center;gap:6px;background:#25D366;color:#fff;border-radius:20px;padding:7px 14px;font-size:.8rem;font-weight:700;text-decoration:none">💬 +91 98910 11883</a>
+        </div>
       </div>
     </div>
     <div class="about-content">
@@ -1209,10 +1213,27 @@ window.addToCart = function(id) {
 };
 
 // ── WhatsApp Button ──
-function openWA() {
-  const msg = encodeURIComponent('Hi CarryMe! 👋 I found your store online and would like to know more about your products.');
-  window.open(`https://wa.me/919999999999?text=${msg}`, '_blank');
-  saveLead('WhatsApp Visitor', 'via WhatsApp button', 'wa');
+const WA_NUMBERS = [
+  { number: '919555128890', name: 'Sales Team 1' },
+  { number: '919891011883', name: 'Sales Team 2' },
+];
+
+function openWA(customMsg) {
+  // Round-robin between both numbers for load balancing
+  const idx = Math.floor(Date.now() / 1000) % WA_NUMBERS.length;
+  const wa = WA_NUMBERS[idx];
+  const msg = encodeURIComponent(customMsg || 'Hi CarryMe! 👋 I found your store online and would like to know more about your products.');
+  window.open(`https://wa.me/${wa.number}?text=${msg}`, '_blank');
+  saveLead('WhatsApp Visitor', '+91 ' + wa.number.slice(2), 'wa');
+}
+
+function openWACart() {
+  const items = cart.map(i => `• ${i.name} x${i.qty} — ₹${i.price * i.qty}`).join('\n');
+  const total = cart.reduce((s, x) => s + x.price * x.qty, 0);
+  const msg = cart.length
+    ? `Hi CarryMe! 👋 I'd like to order:\n\n${items}\n\nTotal: ₹${total}\n\nPlease confirm availability & delivery.`
+    : 'Hi CarryMe! 👋 I found your store online and would like to know more about your products.';
+  openWA(msg);
 }
 
 // Show WA tooltip after 8s
