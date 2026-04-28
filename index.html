@@ -29,7 +29,12 @@
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); min-height: 100vh; }
+  body { font-family: 'DM Sans', sans-serif; background: #1A1814; color: var(--charcoal); min-height: 100vh; }
+  /* sections that need light background */
+  header, nav, .hero, .section, .about-section, .newsletter, .trust-bar, footer,
+  .offers-grid, .reviews-grid, .recent, .product-grid { background-color: inherit; }
+  /* page content area stays cream/warm */
+  .page-wrap { background: var(--cream); }
 
 /* ── HEADER ── */
 header {
@@ -541,6 +546,8 @@ max-height: 75vh; overflow-y: auto;
   </div>
 </nav>
 
+<div class="page-wrap">
+
 <!-- HERO -->
 
 <div class="hero">
@@ -756,6 +763,8 @@ max-height: 75vh; overflow-y: auto;
     <button onclick="showToast('🎉 Subscribed! 10% off code sent to your email.')">Subscribe</button>
   </div>
 </div>
+
+</div><!-- end page-wrap -->
 
 <!-- FOOTER -->
 
@@ -1143,6 +1152,17 @@ function addToCart(id) {
   updateCartBadge();
   showToast(`🛒 ${p.name} added to cart!`);
   renderCart();
+  // Abandoned cart nudge
+  clearTimeout(cartAbandonTimer);
+  if (!nudgeShown) {
+    cartAbandonTimer = setTimeout(() => {
+      const items = cart.map(x => x.name.split(' ').slice(0,2).join(' ')).join(', ');
+      document.getElementById('nudgeText').textContent = `"${items}" ${cart.length > 1 ? 'are' : 'is'} waiting in your cart!`;
+      document.getElementById('cartNudge').classList.add('show');
+      nudgeShown = true;
+      setTimeout(() => document.getElementById('cartNudge').classList.remove('show'), 8000);
+    }, 30000);
+  }
 }
 
 function updateCartBadge() {
@@ -1331,22 +1351,6 @@ setTimeout(() => {
     document.getElementById('exitPopup').classList.add('open');
   }
 }, 45000);
-
-// ── Abandoned Cart Nudge ──
-const origAddToCart = addToCart;
-window.addToCart = function(id) {
-  origAddToCart(id);
-  clearTimeout(cartAbandonTimer);
-  if (!nudgeShown) {
-    cartAbandonTimer = setTimeout(() => {
-      const items = cart.map(x => x.name.split(' ').slice(0,2).join(' ')).join(', ');
-      document.getElementById('nudgeText').textContent = `"${items}" ${cart.length > 1 ? 'are' : 'is'} waiting in your cart!`;
-      document.getElementById('cartNudge').classList.add('show');
-      nudgeShown = true;
-      setTimeout(() => document.getElementById('cartNudge').classList.remove('show'), 8000);
-    }, 30000); // 30s after last add
-  }
-};
 
 // ── WhatsApp Button ──
 const WA_NUMBERS = [
