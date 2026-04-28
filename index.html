@@ -4,8 +4,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CarryMe Store – Premium Home Essentials</title>
-<meta name="description" content="Shop premium table covers, dining mats and home essentials at CarryMe Store. Fast delivery, easy returns." />
+<title>CarryMe Store – Buy Table Covers, Bath Towels & Dining Mats Online India</title>
+<meta name="description" content="Shop premium table covers, bath towels, dining mats and home essentials at CarryMe Store. Free delivery above ₹499. Easy 7-day returns. COD available." />
+<meta name="keywords" content="table cover online India, buy bath towel, dining mats, home essentials, kitchen linen, CarryMe store" />
+<meta property="og:title" content="CarryMe Store – Premium Home Essentials" />
+<meta property="og:description" content="Premium table covers, towels & dining mats. Free delivery above ₹499. Shop now!" />
+<meta property="og:type" content="website" />
+<meta name="robots" content="index, follow" />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root {
@@ -321,10 +326,140 @@ transition: all .35s; white-space: nowrap;
 .footer-inner { grid-template-columns: 1fr; }
 .trust-inner { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── ANNOUNCEMENT BAR ── */
+.ann-bar {
+background: linear-gradient(90deg, var(–charcoal), #3A2E24, var(–charcoal));
+background-size: 200% 100%; animation: annSlide 6s linear infinite;
+color: #fff; text-align: center; padding: 9px 16px; font-size: .85rem; font-weight: 500;
+display: flex; align-items: center; justify-content: center; gap: 32px; flex-wrap: wrap;
+position: relative;
+}
+@keyframes annSlide { 0%{background-position:0%} 100%{background-position:200%} }
+.ann-bar span { display: flex; align-items: center; gap: 6px; }
+.ann-bar em { color: var(–gold-light); font-style: normal; font-weight: 700; }
+.ann-close { position: absolute; right: 12px; background: none; border: none; color: rgba(255,255,255,.5); cursor: pointer; font-size: 1rem; }
+
+/* ── EXIT INTENT POPUP ── */
+.exit-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .35s; }
+.exit-overlay.open { opacity: 1; pointer-events: all; }
+.exit-popup {
+background: var(–warm-white); border-radius: 28px; max-width: 480px; width: 100%;
+overflow: hidden; position: relative; transform: scale(.92); transition: transform .35s;
+box-shadow: 0 24px 80px rgba(0,0,0,.3);
+}
+.exit-overlay.open .exit-popup { transform: scale(1); }
+.exit-img { height: 180px; overflow: hidden; position: relative; }
+.exit-img img { width: 100%; height: 100%; object-fit: cover; }
+.exit-img::after { content: ‘’; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(26,24,20,.7)); }
+.exit-body { padding: 28px 32px 32px; text-align: center; }
+.exit-tag { display: inline-block; background: #FEF0D0; color: var(–gold); font-size: .75rem; font-weight: 700; border-radius: 20px; padding: 4px 14px; margin-bottom: 14px; letter-spacing: .5px; text-transform: uppercase; }
+.exit-body h2 { font-family: ‘Playfair Display’, serif; font-size: 1.7rem; font-weight: 900; margin-bottom: 8px; }
+.exit-body h2 span { color: var(–gold); }
+.exit-body p { color: var(–muted); font-size: .9rem; margin-bottom: 20px; line-height: 1.6; }
+.exit-form { display: flex; flex-direction: column; gap: 10px; }
+.exit-form input { border: 1.5px solid var(–border); border-radius: 12px; padding: 12px 16px; font-family: ‘DM Sans’, sans-serif; font-size: .92rem; outline: none; transition: border-color .2s; }
+.exit-form input:focus { border-color: var(–gold); }
+.exit-form button { background: var(–charcoal); color: #fff; border: none; border-radius: 12px; padding: 13px; font-family: ‘DM Sans’, sans-serif; font-size: .95rem; font-weight: 700; cursor: pointer; transition: background .2s; }
+.exit-form button:hover { background: var(–brown); }
+.exit-skip { margin-top: 10px; font-size: .8rem; color: var(–muted); cursor: pointer; text-decoration: underline; }
+.exit-close { position: absolute; top: 12px; right: 12px; z-index: 1; background: rgba(255,255,255,.85); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: .9rem; display: flex; align-items: center; justify-content: center; }
+.coupon-box { background: #FEF9EE; border: 2px dashed var(–gold); border-radius: 12px; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.coupon-box code { font-size: 1.1rem; font-weight: 800; letter-spacing: 2px; color: var(–charcoal); }
+.coupon-copy { background: var(–gold); color: var(–charcoal); border: none; border-radius: 8px; padding: 5px 12px; font-size: .78rem; font-weight: 700; cursor: pointer; }
+
+/* ── ABANDONED CART NUDGE ── */
+.cart-nudge {
+position: fixed; bottom: 100px; right: 24px; z-index: 300;
+background: var(–warm-white); border: 1.5px solid var(–border); border-radius: 18px;
+padding: 14px 18px; max-width: 280px; box-shadow: var(–shadow-lg);
+transform: translateX(120%); transition: transform .4s cubic-bezier(.4,0,.2,1);
+display: flex; gap: 12px; align-items: flex-start;
+}
+.cart-nudge.show { transform: translateX(0); }
+.nudge-icon { font-size: 1.8rem; flex-shrink: 0; }
+.nudge-body strong { display: block; font-size: .88rem; margin-bottom: 3px; }
+.nudge-body p { font-size: .78rem; color: var(–muted); margin-bottom: 8px; line-height: 1.4; }
+.nudge-body button { background: var(–charcoal); color: #fff; border: none; border-radius: 16px; padding: 7px 14px; font-size: .78rem; font-weight: 700; cursor: pointer; }
+.nudge-close { position: absolute; top: 8px; right: 8px; background: none; border: none; color: var(–muted); cursor: pointer; font-size: .9rem; }
+
+/* ── WHATSAPP BUTTON ── */
+.wa-btn {
+position: fixed; bottom: 24px; right: 24px; z-index: 300;
+background: #25D366; color: #fff; border: none; border-radius: 50%;
+width: 56px; height: 56px; font-size: 1.6rem;
+display: flex; align-items: center; justify-content: center;
+cursor: pointer; box-shadow: 0 4px 20px rgba(37,211,102,.4);
+animation: waPulse 2.5s ease infinite; transition: transform .2s;
+}
+.wa-btn:hover { transform: scale(1.1); }
+@keyframes waPulse { 0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.4)} 50%{box-shadow:0 4px 32px rgba(37,211,102,.7)} }
+.wa-tooltip {
+position: fixed; bottom: 32px; right: 92px; z-index: 300;
+background: var(–charcoal); color: #fff; border-radius: 12px; padding: 8px 14px;
+font-size: .82rem; font-weight: 500; white-space: nowrap; pointer-events: none;
+opacity: 0; transform: translateX(8px); transition: all .3s;
+}
+.wa-tooltip.show { opacity: 1; transform: translateX(0); }
+
+/* ── LEAD COUNTER (social proof) ── */
+.live-badge {
+display: inline-flex; align-items: center; gap: 6px;
+background: #FEF0D0; border: 1px solid #F0D080; border-radius: 20px;
+padding: 5px 12px; font-size: .78rem; font-weight: 600; color: var(–brown);
+margin-bottom: 16px;
+}
+.live-dot { width: 7px; height: 7px; background: var(–rust); border-radius: 50%; animation: waPulse 1.5s ease infinite; }
+
+/* ── STICKY BOTTOM BAR (mobile) ── */
+.sticky-cta {
+display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+background: var(–warm-white); border-top: 1px solid var(–border);
+padding: 12px 20px; gap: 10px; align-items: center;
+box-shadow: 0 -4px 20px rgba(26,24,20,.1);
+}
+@media (max-width: 600px) { .sticky-cta { display: flex; } }
+.sticky-cta button:first-child { flex: 1; background: var(–charcoal); color: #fff; border: none; border-radius: 24px; padding: 13px; font-family: ‘DM Sans’, sans-serif; font-size: .95rem; font-weight: 700; cursor: pointer; }
+.sticky-cta button:last-child { background: #25D366; color: #fff; border: none; border-radius: 24px; padding: 13px 18px; font-size: 1.2rem; cursor: pointer; }
+
+/* ── LEAD DASHBOARD (bottom sheet for demo) ── */
+.leads-panel {
+position: fixed; bottom: 0; left: 0; right: 0; z-index: 400;
+background: var(–warm-white); border-radius: 24px 24px 0 0;
+box-shadow: 0 -8px 40px rgba(26,24,20,.15);
+transform: translateY(100%); transition: transform .4s cubic-bezier(.4,0,.2,1);
+max-height: 75vh; overflow-y: auto;
+}
+.leads-panel.open { transform: translateY(0); }
+.leads-handle { width: 40px; height: 4px; background: var(–border); border-radius: 4px; margin: 14px auto 0; }
+.leads-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px 12px; border-bottom: 1px solid var(–border); }
+.leads-head h3 { font-family: ‘Playfair Display’, serif; font-size: 1.1rem; font-weight: 700; }
+.leads-head button { background: none; border: none; cursor: pointer; color: var(–muted); font-size: 1.1rem; }
+.leads-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.leads-table th { text-align: left; padding: 10px 16px; color: var(–muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; background: var(–cream); }
+.leads-table td { padding: 12px 16px; border-top: 1px solid var(–border); }
+.leads-table tr:hover td { background: #FAF7F2; }
+.lead-src { display: inline-block; border-radius: 12px; padding: 2px 10px; font-size: .75rem; font-weight: 600; }
+.src-popup { background: #FEF0D0; color: var(–brown); }
+.src-nl { background: #E8F4EE; color: var(–sage); }
+.src-cart { background: #FDE8E0; color: var(–rust); }
+.src-wa { background: #E0F8EC; color: #1A7A44; }
+.leads-footer { padding: 14px 24px; border-top: 1px solid var(–border); display: flex; gap: 10px; align-items: center; }
+.leads-footer span { font-size: .82rem; color: var(–muted); }
+.export-btn { margin-left: auto; background: var(–charcoal); color: #fff; border: none; border-radius: 20px; padding: 8px 18px; font-size: .82rem; font-weight: 700; cursor: pointer; }
 </style>
 
 </head>
 <body>
+
+<!-- ANNOUNCEMENT BAR -->
+
+<div class="ann-bar" id="annBar">
+  <span>🚚 <em>FREE delivery</em> on orders above ₹499</span>
+  <span>🎁 Use code <em>CARRY10</em> for 10% off your first order</span>
+  <span>⭐ 12,000+ happy customers across India</span>
+  <button class="ann-close" onclick="document.getElementById('annBar').style.display='none'">✕</button>
+</div>
 
 <!-- HEADER -->
 
@@ -354,6 +489,7 @@ transition: all .35s; white-space: nowrap;
     <a href="#products">Table Covers</a>
     <a href="#products">Dining Mats</a>
     <a href="#products">Kitchen</a>
+    <a href="#products">Towels</a>
     <a href="#products">New Arrivals</a>
     <a href="#offers">Offers</a>
     <a href="#" id="dealerNav" style="margin-left:auto; color: var(--gold-light);">Dealer / Retailer</a>
@@ -365,6 +501,7 @@ transition: all .35s; white-space: nowrap;
 <div class="hero">
   <div class="hero-text">
     <div class="hero-tag">✨ New Collection 2025</div>
+    <div class="live-badge"><span class="live-dot"></span> <span id="liveCount">24</span> people viewing right now</div>
     <h1>Dress Your Table.<br>Elevate Every <em>Meal.</em></h1>
     <p>Premium table covers, dining mats, and home essentials that bring elegance to your everyday living — delivered fast across India.</p>
     <div class="hero-actions">
@@ -425,6 +562,7 @@ transition: all .35s; white-space: nowrap;
     <div class="cat-pill" data-cat="mats">Dining Mats</div>
     <div class="cat-pill" data-cat="kitchen">Kitchen</div>
     <div class="cat-pill" data-cat="decor">Decor</div>
+    <div class="cat-pill" data-cat="towels">🛁 Towels</div>
   </div>
   <div class="product-grid" id="productGrid"></div>
 </div>
@@ -515,6 +653,7 @@ transition: all .35s; white-space: nowrap;
       <h4>SHOP</h4>
       <a href="#">Table Covers</a>
       <a href="#">Dining Mats</a>
+      <a href="#">Towels</a>
       <a href="#">Kitchen Essentials</a>
       <a href="#">New Arrivals</a>
       <a href="#">Sale</a>
@@ -627,6 +766,70 @@ transition: all .35s; white-space: nowrap;
   </div>
 </div>
 
+<!-- EXIT INTENT POPUP -->
+
+<div class="exit-overlay" id="exitPopup">
+  <div class="exit-popup">
+    <button class="exit-close" onclick="closeExit()">✕</button>
+    <div class="exit-img">
+      <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80" alt="Special offer" />
+    </div>
+    <div class="exit-body" id="exitBody">
+      <div class="exit-tag">🎁 Wait! Special Offer</div>
+      <h2>Get <span>15% Off</span><br>Before You Go!</h2>
+      <p>Enter your details and we'll send an exclusive discount code straight to your WhatsApp.</p>
+      <div class="exit-form">
+        <input type="text" id="exitName" placeholder="Your name" />
+        <input type="tel" id="exitPhone" placeholder="WhatsApp number" />
+        <button onclick="claimExitOffer()">Send My 15% Off Code 🎁</button>
+      </div>
+      <div class="exit-skip" onclick="closeExit()">No thanks, I'll pay full price</div>
+    </div>
+  </div>
+</div>
+
+<!-- ABANDONED CART NUDGE -->
+
+<div class="cart-nudge" id="cartNudge">
+  <button class="nudge-close" onclick="document.getElementById('cartNudge').classList.remove('show')">✕</button>
+  <span class="nudge-icon">🛒</span>
+  <div class="nudge-body">
+    <strong>Your cart misses you!</strong>
+    <p id="nudgeText">You left items in your cart. Complete your order now!</p>
+    <button onclick="openCart();document.getElementById('cartNudge').classList.remove('show')">Complete Order →</button>
+  </div>
+</div>
+
+<!-- WHATSAPP BUTTON -->
+
+<div class="wa-tooltip" id="waTooltip">💬 Chat with us on WhatsApp</div>
+<button class="wa-btn" id="waBtn" onclick="openWA()">💬</button>
+
+<!-- STICKY MOBILE CTA -->
+
+<div class="sticky-cta">
+  <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">🛒 Shop Now</button>
+  <button onclick="openWA()">💬</button>
+</div>
+
+<!-- LEADS PANEL -->
+
+<div class="leads-panel" id="leadsPanel">
+  <div class="leads-handle"></div>
+  <div class="leads-head">
+    <h3>📊 Lead Dashboard <span style="font-size:.75rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400"> — <span id="leadCount">0</span> captured</span></h3>
+    <button onclick="document.getElementById('leadsPanel').classList.remove('open')">✕</button>
+  </div>
+  <table class="leads-table">
+    <thead><tr><th>#</th><th>Name</th><th>Contact</th><th>Source</th><th>Time</th></tr></thead>
+    <tbody id="leadsBody"></tbody>
+  </table>
+  <div class="leads-footer">
+    <span id="leadsFooterNote">All leads captured on this session</span>
+    <button class="export-btn" onclick="exportLeads()">⬇ Export CSV</button>
+  </div>
+</div>
+
 <!-- TOAST -->
 
 <div class="toast" id="toast"></div>
@@ -641,6 +844,13 @@ const products = [
   { id:6, name:'Floral Table Runner', desc:'Handcrafted | Decorative', price:199, old:350, img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80', badge:'New', cat:'decor', rating:'4.5', reviews:45 },
   { id:7, name:'Waterproof PVC Cover', desc:'Heavy Duty | Clear Finish', price:499, old:750, img:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&q=80', badge:'', cat:'covers', rating:'4.7', reviews:71 },
   { id:8, name:'Boho Woven Mat Set', desc:'Handwoven | Eco-friendly', price:379, old:580, img:'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=500&q=80', badge:'New', cat:'mats', rating:'4.6', reviews:38 },
+  // TOWELS
+  { id:9,  name:'Premium Bath Towel', desc:'Extra Soft | 600 GSM | 100% Cotton', price:349, old:550, img:'https://images.unsplash.com/photo-1600369671236-e74521d4b6ad?w=500&q=80', badge:'Bestseller', cat:'towels', rating:'4.9', reviews:312 },
+  { id:10, name:'Hand Towel Set (4 pcs)', desc:'Quick Dry | Absorbent | Colourfast', price:249, old:399, img:'https://images.unsplash.com/photo-1583845112239-97ef1341b271?w=500&q=80', badge:'Sale', cat:'towels', rating:'4.7', reviews:185 },
+  { id:11, name:'Face Towel Pack (6 pcs)', desc:'Ultra Soft | Gentle on Skin', price:199, old:320, img:'https://images.unsplash.com/photo-1563453392212-326f5e854473?w=500&q=80', badge:'New', cat:'towels', rating:'4.8', reviews:97 },
+  { id:12, name:'Kids Bath Towel (Hooded)', desc:'Fun Design | Super Absorbent | Safe Dye', price:299, old:480, img:'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&q=80', badge:'New', cat:'towels', rating:'4.8', reviews:74 },
+  { id:13, name:'Bath Towel Set (3 pcs)', desc:'Hotel Quality | 550 GSM | Zero Twist', price:799, old:1199, img:'https://images.unsplash.com/photo-1600369672770-985fd30004eb?w=500&q=80', badge:'Sale', cat:'towels', rating:'4.9', reviews:228 },
+  { id:14, name:'Sports & Gym Towel', desc:'Microfibre | Compact | Fast Dry', price:179, old:299, img:'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=500&q=80', badge:'', cat:'towels', rating:'4.6', reviews:143 },
 ];
 
 let cart = [];
@@ -770,6 +980,151 @@ document.getElementById('dealerNav').addEventListener('click', () => { openModal
 document.getElementById('dealerFooter').addEventListener('click', () => { openModal('authModal'); switchTab('register'); });
 
 renderProducts('all');
+
+/* ══════════════════════════════════════
+   LEAD GENERATION ENGINE
+══════════════════════════════════════ */
+
+let leads = [];
+let exitShown = false;
+let nudgeShown = false;
+let cartAbandonTimer = null;
+
+// ── Lead Logger ──
+function saveLead(name, contact, source) {
+  const lead = { id: leads.length + 1, name, contact, source, time: new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'}) };
+  leads.push(lead);
+  renderLeads();
+  document.getElementById('leadCount').textContent = leads.length;
+}
+
+function renderLeads() {
+  document.getElementById('leadsBody').innerHTML = leads.map(l => `
+    <tr>
+      <td style="color:var(--muted)">${l.id}</td>
+      <td><strong>${l.name}</strong></td>
+      <td>${l.contact}</td>
+      <td><span class="lead-src src-${l.source.toLowerCase().replace(/\s/g,'')}">${l.source}</span></td>
+      <td style="color:var(--muted)">${l.time}</td>
+    </tr>
+  `).join('');
+}
+
+function exportLeads() {
+  if (!leads.length) { showToast('No leads yet to export!'); return; }
+  const csv = 'ID,Name,Contact,Source,Time\n' + leads.map(l => `${l.id},"${l.name}","${l.contact}","${l.source}","${l.time}"`).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'carryme_leads.csv';
+  a.click();
+  showToast('✅ Leads exported as CSV!');
+}
+
+// ── Newsletter capture ──
+document.querySelector('.nl-form button').addEventListener('click', function() {
+  const email = document.querySelector('.nl-form input').value.trim();
+  if (!email) { showToast('Please enter your email!'); return; }
+  saveLead(email.split('@')[0], email, 'nl');
+  document.querySelector('.nl-form input').value = '';
+  showToast('🎉 Subscribed! 10% off code sent to your email.');
+});
+
+// ── Exit Intent Popup ──
+function closeExit() { document.getElementById('exitPopup').classList.remove('open'); }
+
+function claimExitOffer() {
+  const name = document.getElementById('exitName').value.trim() || 'Customer';
+  const phone = document.getElementById('exitPhone').value.trim();
+  if (!phone) { showToast('Please enter your WhatsApp number!'); return; }
+  saveLead(name, phone, 'popup');
+  document.getElementById('exitBody').innerHTML = `
+    <div class="exit-tag">🎉 Code Sent!</div>
+    <h2>You're all set, <span>${name}</span>!</h2>
+    <p>Your exclusive code has been sent to WhatsApp <strong>${phone}</strong>.</p>
+    <div class="coupon-box">
+      <code>CARRY15</code>
+      <button class="coupon-copy" onclick="navigator.clipboard.writeText('CARRY15');showToast('Copied!')">Copy</button>
+    </div>
+    <button class="btn-primary" style="width:100%;border-radius:12px;padding:13px" onclick="closeExit()">Start Shopping →</button>
+  `;
+}
+
+// Trigger exit intent on mouse leave (desktop)
+document.addEventListener('mouseleave', e => {
+  if (e.clientY < 10 && !exitShown && leads.length === 0) {
+    exitShown = true;
+    setTimeout(() => document.getElementById('exitPopup').classList.add('open'), 400);
+  }
+});
+
+// Trigger exit intent on mobile scroll back up quickly
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const curr = window.scrollY;
+  if (lastScroll - curr > 80 && curr > 400 && !exitShown && leads.length === 0) {
+    exitShown = true;
+    document.getElementById('exitPopup').classList.add('open');
+  }
+  lastScroll = curr;
+});
+
+// Auto-show popup after 45s if no lead captured
+setTimeout(() => {
+  if (!exitShown && leads.length === 0) {
+    exitShown = true;
+    document.getElementById('exitPopup').classList.add('open');
+  }
+}, 45000);
+
+// ── Abandoned Cart Nudge ──
+const origAddToCart = addToCart;
+window.addToCart = function(id) {
+  origAddToCart(id);
+  clearTimeout(cartAbandonTimer);
+  if (!nudgeShown) {
+    cartAbandonTimer = setTimeout(() => {
+      const items = cart.map(x => x.name.split(' ').slice(0,2).join(' ')).join(', ');
+      document.getElementById('nudgeText').textContent = `"${items}" ${cart.length > 1 ? 'are' : 'is'} waiting in your cart!`;
+      document.getElementById('cartNudge').classList.add('show');
+      nudgeShown = true;
+      setTimeout(() => document.getElementById('cartNudge').classList.remove('show'), 8000);
+    }, 30000); // 30s after last add
+  }
+};
+
+// ── WhatsApp Button ──
+function openWA() {
+  const msg = encodeURIComponent('Hi CarryMe! 👋 I found your store online and would like to know more about your products.');
+  window.open(`https://wa.me/919999999999?text=${msg}`, '_blank');
+  saveLead('WhatsApp Visitor', 'via WhatsApp button', 'wa');
+}
+
+// Show WA tooltip after 8s
+setTimeout(() => {
+  const tip = document.getElementById('waTooltip');
+  tip.classList.add('show');
+  setTimeout(() => tip.classList.remove('show'), 4000);
+}, 8000);
+
+// ── Live Viewer Count (simulated) ──
+function randomBetween(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+let viewerCount = randomBetween(18, 34);
+document.getElementById('liveCount').textContent = viewerCount;
+setInterval(() => {
+  viewerCount += randomBetween(-2, 3);
+  viewerCount = Math.max(8, Math.min(60, viewerCount));
+  document.getElementById('liveCount').textContent = viewerCount;
+}, 5000);
+
+// ── Lead Dashboard Toggle (click logo 3x) ──
+let logoClicks = 0;
+document.querySelector('.logo').addEventListener('click', e => {
+  e.preventDefault(); logoClicks++;
+  if (logoClicks >= 3) { logoClicks = 0; document.getElementById('leadsPanel').classList.toggle('open'); }
+});
+
+// ── Seed a demo lead after 3s ──
+setTimeout(() => saveLead('Demo Visitor', '+91 98765 00001', 'nl'), 3000);
 </script>
 
 </body>
