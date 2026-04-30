@@ -1,65 +1,953 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
-<title>CarryMe Admin</title>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-var admin = require("firebase-admin");
-
-var serviceAccount = require("path/to/serviceAccountKey.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
-
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyA7aXFJORBHTw5noD32RQS3kPB835GbkTc",
-    authDomain: "carryme-9bc5d.firebaseapp.com",
-    projectId: "carryme-9bc5d",
-    storageBucket: "carryme-9bc5d.firebasestorage.app",
-    messagingSenderId: "594580858279",
-    appId: "1:594580858279:web:827ddbb1bb0334d60c8282",
-    measurementId: "G-773WNVC79R"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-
-  document.getElementById("orders").innerHTML = html;
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CarryMe Admin — Kashvi Furnishing</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:     #0A0907;
+  --bg2:    #111009;
+  --panel:  #16140F;
+  --edge:   #2A2620;
+  --gold:   #C9973A;
+  --gold2:  #E8C47A;
+  --cream:  #F0EBE0;
+  --muted:  #6A6258;
+  --green:  #3D8A5E;
+  --green2: #5AB882;
+  --red:    #B84040;
+  --red2:   #E07070;
+  --blue:   #3A6888;
+  --blue2:  #70A8C8;
+  --amber:  #C07830;
+  --amber2: #E0A860;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream)}
 
-window.updateStatus = async function(id, status){
-  await updateDoc(doc(db,"orders",id),{
-    status: status
-  });
-  alert("Updated!");
-  loadOrders();
+/* ── LAYOUT ── */
+.app{display:grid;grid-template-columns:220px 1fr;grid-template-rows:60px 1fr;height:100vh;overflow:hidden}
+
+/* ── TOP BAR ── */
+.topbar{grid-column:1/-1;background:var(–panel);border-bottom:1px solid var(–edge);display:flex;align-items:center;padding:0 24px;gap:20px;z-index:10}
+.tb-logo{font-family:‘Syne’,sans-serif;font-size:1.15rem;font-weight:800;color:var(–cream);letter-spacing:-0.5px;white-space:nowrap}
+.tb-logo span{color:var(–gold)}
+.tb-logo sub{font-size:.6rem;color:var(–muted);font-weight:400;letter-spacing:1px;text-transform:uppercase;display:block;margin-top:-2px}
+.tb-sep{width:1px;height:28px;background:var(–edge)}
+.tb-search{flex:1;max-width:340px;display:flex;align-items:center;gap:8px;background:var(–bg2);border:1px solid var(–edge);border-radius:8px;padding:7px 12px}
+.tb-search input{background:transparent;border:none;color:var(–cream);font-family:‘DM Sans’,sans-serif;font-size:.82rem;outline:none;flex:1}
+.tb-search input::placeholder{color:var(–muted)}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.tb-badge{background:var(–red);color:#fff;font-size:.65rem;font-weight:700;border-radius:10px;padding:2px 8px}
+.tb-avatar{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(–gold),var(–amber));display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:var(–bg);cursor:pointer}
+.tb-time{font-family:‘DM Mono’,monospace;font-size:.75rem;color:var(–muted)}
+
+/* ── SIDEBAR ── */
+.sidebar{background:var(–panel);border-right:1px solid var(–edge);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-section{padding:16px 14px 8px;font-size:.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(–muted)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;border-radius:8px;margin:1px 8px;transition:all .2s;font-size:.83rem;font-weight:500;color:rgba(240,235,224,.55);position:relative}
+.nav-item:hover{background:var(–edge);color:var(–cream)}
+.nav-item.active{background:rgba(201,151,58,.12);color:var(–gold)}
+.nav-item.active::before{content:’’;position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(–gold);border-radius:2px}
+.nav-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+.nav-count{margin-left:auto;background:var(–edge);color:var(–muted);font-size:.65rem;font-weight:700;border-radius:8px;padding:2px 7px}
+.nav-count.alert{background:rgba(184,64,64,.2);color:var(–red2)}
+.sidebar-bottom{margin-top:auto;padding:16px;border-top:1px solid var(–edge)}
+.store-info{background:var(–bg2);border-radius:10px;padding:12px;font-size:.75rem}
+.store-info strong{display:block;color:var(–cream);margin-bottom:2px}
+.store-info span{color:var(–muted);font-size:.7rem}
+.online-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(–green2);margin-right:4px;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── MAIN CONTENT ── */
+.main{overflow-y:auto;overflow-x:hidden;background:var(–bg)}
+.main::-webkit-scrollbar{width:4px}
+.main::-webkit-scrollbar-thumb{background:var(–edge);border-radius:4px}
+
+/* ── SCREEN ── */
+.screen{display:none;padding:24px;animation:fadeIn .2s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.page-title{font-family:‘Syne’,sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:4px;color:var(–cream)}
+.page-sub{font-size:.8rem;color:var(–muted);margin-bottom:24px}
+
+/* ── KPI CARDS ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.kpi{background:var(–panel);border:1px solid var(–edge);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden;transition:border-color .2s}
+.kpi:hover{border-color:var(–gold)}
+.kpi::after{content:’’;position:absolute;top:0;right:0;width:60px;height:60px;border-radius:0 14px 0 60px;opacity:.06}
+.kpi.green::after{background:var(–green2)}
+.kpi.gold::after{background:var(–gold)}
+.kpi.blue::after{background:var(–blue2)}
+.kpi.red::after{background:var(–red2)}
+.kpi-label{font-size:.72rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(–muted);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.kpi-val{font-family:‘Syne’,sans-serif;font-size:1.9rem;font-weight:800;color:var(–cream);margin-bottom:6px;line-height:1}
+.kpi-change{font-size:.72rem;font-weight:600;display:flex;align-items:center;gap:3px}
+.kpi-change.up{color:var(–green2)}
+.kpi-change.down{color:var(–red2)}
+.kpi-chart{height:36px;display:flex;align-items:flex-end;gap:3px;margin-top:12px;opacity:.6}
+.kpi-bar{background:var(–gold);border-radius:2px;flex:1;transition:height .5s}
+.kpi.green .kpi-bar{background:var(–green2)}
+.kpi.blue .kpi-bar{background:var(–blue2)}
+.kpi.red .kpi-bar{background:var(–red2)}
+
+/* ── GRID 2 ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+
+/* ── PANEL ── */
+.card{background:var(–panel);border:1px solid var(–edge);border-radius:14px;overflow:hidden}
+.card-head{padding:16px 20px;border-bottom:1px solid var(–edge);display:flex;align-items:center;justify-content:space-between}
+.card-head h3{font-family:‘Syne’,sans-serif;font-size:.9rem;font-weight:700;color:var(–cream)}
+.card-head span{font-size:.72rem;color:var(–muted)}
+.card-body{padding:16px 20px}
+
+/* ── CHART ── */
+.chart-wrap{height:140px;display:flex;align-items:flex-end;gap:6px;padding:8px 0}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.chart-bar{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(–gold),var(–amber));transition:height .6s cubic-bezier(.4,0,.2,1);cursor:pointer;position:relative}
+.chart-bar:hover{filter:brightness(1.2)}
+.chart-bar .tip{position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:var(–cream);color:var(–bg);font-size:.65rem;font-weight:700;border-radius:4px;padding:2px 6px;white-space:nowrap;opacity:0;transition:opacity .15s;pointer-events:none}
+.chart-bar:hover .tip{opacity:1}
+.chart-lbl{font-size:.62rem;color:var(–muted);text-align:center}
+
+/* ── ORDER TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-size:.8rem}
+.tbl th{text-align:left;padding:10px 14px;font-size:.65rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(–muted);border-bottom:1px solid var(–edge)}
+.tbl td{padding:11px 14px;border-bottom:1px solid rgba(42,38,32,.5);color:var(–cream);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(42,38,32,.3)}
+.tbl .order-id{font-family:‘DM Mono’,monospace;font-size:.75rem;color:var(–gold2)}
+.status-pill{display:inline-flex;align-items:center;gap:4px;border-radius:20px;padding:3px 10px;font-size:.68rem;font-weight:700;letter-spacing:.3px}
+.s-delivered{background:rgba(61,138,94,.15);color:var(–green2);border:1px solid rgba(61,138,94,.25)}
+.s-transit{background:rgba(58,104,136,.15);color:var(–blue2);border:1px solid rgba(58,104,136,.25)}
+.s-pending{background:rgba(192,120,48,.15);color:var(–amber2);border:1px solid rgba(192,120,48,.25)}
+.s-cancelled{background:rgba(184,64,64,.15);color:var(–red2);border:1px solid rgba(184,64,64,.25)}
+.s-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.action-btn{background:var(–edge);border:none;color:var(–cream);border-radius:6px;padding:4px 10px;font-size:.7rem;font-weight:600;cursor:pointer;transition:background .2s}
+.action-btn:hover{background:var(–gold);color:var(–bg)}
+
+/* ── LEADS TABLE ── */
+.lead-src{display:inline-block;border-radius:8px;padding:2px 8px;font-size:.67rem;font-weight:700}
+.ls-popup{background:rgba(201,151,58,.15);color:var(–gold2)}
+.ls-nl{background:rgba(61,138,94,.15);color:var(–green2)}
+.ls-wa{background:rgba(37,211,102,.15);color:#5AE08A}
+.ls-chat{background:rgba(58,104,136,.15);color:var(–blue2)}
+.ls-order{background:rgba(192,120,48,.15);color:var(–amber2)}
+
+/* ── PRODUCTS GRID ── */
+.prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px 20px}
+.prod-card{background:var(–bg2);border:1px solid var(–edge);border-radius:12px;overflow:hidden;transition:border-color .2s}
+.prod-card:hover{border-color:var(–gold)}
+.prod-img{height:100px;overflow:hidden;background:var(–edge)}
+.prod-img img{width:100%;height:100%;object-fit:cover;opacity:.85}
+.prod-info{padding:10px}
+.prod-info strong{display:block;font-size:.78rem;font-weight:700;color:var(–cream);margin-bottom:3px;line-height:1.3}
+.prod-info .prod-price{font-family:‘DM Mono’,monospace;font-size:.78rem;color:var(–gold2);margin-bottom:6px}
+.prod-info .prod-stock{font-size:.68rem;color:var(–muted)}
+.prod-actions{display:flex;gap:6px;margin-top:8px}
+.pa-btn{flex:1;background:var(–edge);border:none;color:var(–cream);border-radius:6px;padding:5px;font-size:.68rem;font-weight:600;cursor:pointer;transition:background .2s;text-align:center}
+.pa-btn:hover{background:var(–gold);color:var(–bg)}
+.pa-btn.del:hover{background:var(–red);color:#fff}
+
+/* ── STAT BARS ── */
+.stat-bar-item{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:.78rem}
+.stat-bar-label{width:80px;color:rgba(240,235,224,.65);flex-shrink:0;font-size:.72rem}
+.stat-bar-track{flex:1;height:6px;background:var(–edge);border-radius:3px;overflow:hidden}
+.stat-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(–gold),var(–gold2));transition:width .8s cubic-bezier(.4,0,.2,1)}
+.stat-bar-val{width:32px;text-align:right;color:var(–muted);font-size:.7rem;font-family:‘DM Mono’,monospace}
+
+/* ── ACTIVITY FEED ── */
+.activity-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(42,38,32,.5)}
+.activity-item:last-child{border-bottom:none}
+.act-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.act-text{font-size:.78rem;color:rgba(240,235,224,.75);line-height:1.5}
+.act-time{font-size:.68rem;color:var(–muted);margin-top:2px;font-family:‘DM Mono’,monospace}
+
+/* ── ADD PRODUCT FORM ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(–muted);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(–bg2);border:1px solid var(–edge);border-radius:8px;padding:9px 12px;font-family:‘DM Sans’,sans-serif;font-size:.85rem;color:var(–cream);outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(–gold)}
+.form-group textarea{height:80px;resize:vertical}
+.form-group select option{background:var(–panel)}
+.submit-btn{background:var(–gold);color:var(–bg);border:none;border-radius:10px;padding:11px 24px;font-family:‘Syne’,sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s}
+.submit-btn:hover{background:var(–gold2);transform:translateY(-1px)}
+.cancel-btn{background:var(–edge);color:var(–cream);border:none;border-radius:10px;padding:11px 18px;font-family:‘DM Sans’,sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;margin-right:8px}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(–panel);border:1px solid var(–edge);border-radius:18px;padding:28px;max-width:520px;width:100%;position:relative;transform:scale(.95);transition:transform .3s}
+.modal-overlay.open .modal{transform:scale(1)}
+.modal h3{font-family:‘Syne’,sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:16px;color:var(–cream)}
+.modal-close{position:absolute;top:14px;right:14px;background:var(–edge);border:none;color:var(–muted);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(–panel);border:1px solid var(–edge);color:var(–cream);border-radius:12px;padding:12px 18px;font-size:.82rem;font-weight:500;z-index:200;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{border-color:var(–green);color:var(–green2)}
+.toast.error{border-color:var(–red);color:var(–red2)}
+
+/* ── WHATSAPP QUICK MSG ── */
+.wa-quick{background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);border-radius:10px;padding:12px 14px;font-size:.78rem;color:rgba(240,235,224,.7);display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s;margin-bottom:8px}
+.wa-quick:hover{background:rgba(37,211,102,.15);border-color:rgba(37,211,102,.4)}
+.wa-quick strong{color:var(–cream);display:block;margin-bottom:2px;font-size:.8rem}
+
+@media(max-width:900px){
+.app{grid-template-columns:1fr;grid-template-rows:60px 1fr}
+.sidebar{display:none}
+.kpi-grid{grid-template-columns:1fr 1fr}
+.grid2,.grid3{grid-template-columns:1fr}
+.prod-grid{grid-template-columns:1fr 1fr}
 }
-
-window.onload = loadOrders;
-</script>
+</style>
 
 </head>
-
 <body>
-<h1>CarryMe Admin Panel</h1>
+<div class="app">
 
-<div id="orders">Loading...</div>
+  <!-- TOP BAR -->
+
+  <div class="topbar">
+    <div class="tb-logo">CarryMe <span>Admin</span><sub>Kashvi Furnishing · Noida</sub></div>
+    <div class="tb-sep"></div>
+    <div class="tb-search">
+      <span style="color:var(--muted);font-size:.85rem">🔍</span>
+      <input placeholder="Search orders, products, leads…" oninput="globalSearch(this.value)"/>
+    </div>
+    <div class="tb-right">
+      <span style="font-size:.78rem;color:var(--muted)">🟢 Store Live</span>
+      <span class="tb-badge" id="alertBadge">3 new</span>
+      <span class="tb-time" id="topTime"></span>
+      <div class="tb-avatar">KF</div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+
+  <div class="sidebar">
+    <div class="sidebar-section">Main</div>
+    <div class="nav-item active" onclick="showScreen('dashboard',this)"><span class="nav-icon">📊</span>Dashboard<span class="nav-count" id="nc-dashboard"></span></div>
+    <div class="nav-item" onclick="showScreen('orders',this)"><span class="nav-icon">📦</span>Orders<span class="nav-count alert" id="nc-orders">5</span></div>
+    <div class="nav-item" onclick="showScreen('products',this)"><span class="nav-icon">🛍</span>Products<span class="nav-count" id="nc-products">14</span></div>
+    <div class="nav-item" onclick="showScreen('leads',this)"><span class="nav-icon">👥</span>Leads<span class="nav-count alert" id="nc-leads">8</span></div>
+
+```
+<div class="sidebar-section" style="margin-top:8px">Reports</div>
+<div class="nav-item" onclick="showScreen('revenue',this)"><span class="nav-icon">💰</span>Revenue</div>
+<div class="nav-item" onclick="showScreen('whatsapp',this)"><span class="nav-icon">💬</span>WhatsApp CRM</div>
+
+<div class="sidebar-section" style="margin-top:8px">Settings</div>
+<div class="nav-item" onclick="showScreen('settings',this)"><span class="nav-icon">⚙️</span>Settings</div>
+
+<div class="sidebar-bottom">
+  <div class="store-info">
+    <strong><span class="online-dot"></span>Store Online</strong>
+    <span>www.carryme.store<br/>Last updated: just now</span>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- MAIN -->
+
+  <div class="main">
+
+```
+<!-- ── DASHBOARD ── -->
+<div class="screen active" id="screen-dashboard">
+  <div class="page-title">Dashboard</div>
+  <div class="page-sub" id="dashDate">Loading…</div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi green">
+      <div class="kpi-label">💰 Today's Revenue</div>
+      <div class="kpi-val" id="kpiRev">₹0</div>
+      <div class="kpi-change up" id="kpiRevChange">▲ 0%</div>
+      <div class="kpi-chart" id="kpiRevChart"></div>
+    </div>
+    <div class="kpi gold">
+      <div class="kpi-label">📦 Total Orders</div>
+      <div class="kpi-val" id="kpiOrders">0</div>
+      <div class="kpi-change up" id="kpiOrdChange">▲ 0%</div>
+      <div class="kpi-chart" id="kpiOrdChart"></div>
+    </div>
+    <div class="kpi blue">
+      <div class="kpi-label">👥 Leads Today</div>
+      <div class="kpi-val" id="kpiLeads">0</div>
+      <div class="kpi-change up" id="kpiLeadChange">▲ 0%</div>
+      <div class="kpi-chart" id="kpiLeadChart"></div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">👁 Visitors Today</div>
+      <div class="kpi-val" id="kpiVisitors">0</div>
+      <div class="kpi-change down" id="kpiVisChange">▲ 0%</div>
+      <div class="kpi-chart" id="kpiVisChart"></div>
+    </div>
+  </div>
+
+  <!-- Charts + Activity -->
+  <div class="grid3">
+    <div class="card">
+      <div class="card-head"><h3>Revenue — Last 14 Days</h3><span id="revTotal"></span></div>
+      <div class="card-body">
+        <div class="chart-wrap" id="revenueChart"></div>
+        <div style="display:flex;gap:12px;margin-top:4px" id="revenueLabels"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Live Activity</h3><span style="color:var(--green2);font-size:.7rem">● Live</span></div>
+      <div class="card-body" id="activityFeed" style="max-height:180px;overflow-y:auto"></div>
+    </div>
+  </div>
+
+  <!-- Orders + Top Products -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><h3>Recent Orders</h3><span onclick="showScreen('orders',null)" style="cursor:pointer;color:var(--gold);font-size:.75rem">View all →</span></div>
+      <div style="overflow-x:auto">
+        <table class="tbl" id="dashOrderTable"></table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Top Categories</h3><span>By sales</span></div>
+      <div class="card-body" id="categoryChart"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ORDERS ── -->
+<div class="screen" id="screen-orders">
+  <div class="page-title">Orders</div>
+  <div class="page-sub">Manage and track all customer orders</div>
+  <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="action-btn" style="background:rgba(201,151,58,.15);color:var(--gold2);border:1px solid rgba(201,151,58,.2)" onclick="filterOrders('all')">All Orders</button>
+    <button class="action-btn" onclick="filterOrders('pending')">⏳ Pending</button>
+    <button class="action-btn" onclick="filterOrders('transit')">🚚 In Transit</button>
+    <button class="action-btn" onclick="filterOrders('delivered')">✅ Delivered</button>
+    <button class="action-btn" onclick="filterOrders('cancelled')">❌ Cancelled</button>
+    <button class="action-btn" style="margin-left:auto;background:rgba(37,211,102,.1);color:#5AE08A;border:1px solid rgba(37,211,102,.2)" onclick="exportOrders()">⬇ Export CSV</button>
+  </div>
+  <div class="card">
+    <div style="overflow-x:auto">
+      <table class="tbl" id="ordersTable"></table>
+    </div>
+  </div>
+</div>
+
+<!-- ── PRODUCTS ── -->
+<div class="screen" id="screen-products">
+  <div class="page-title">Products</div>
+  <div class="page-sub">Manage your product catalogue</div>
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <button class="action-btn" style="background:rgba(201,151,58,.15);color:var(--gold2);border:1px solid rgba(201,151,58,.2)" onclick="document.getElementById('addProductModal').classList.add('open')">+ Add Product</button>
+    <button class="action-btn" onclick="filterProducts('all')">All</button>
+    <button class="action-btn" onclick="filterProducts('covers')">Table Covers</button>
+    <button class="action-btn" onclick="filterProducts('mats')">Mats</button>
+    <button class="action-btn" onclick="filterProducts('towels')">Towels</button>
+  </div>
+  <div class="prod-grid" id="productsGrid"></div>
+</div>
+
+<!-- ── LEADS ── -->
+<div class="screen" id="screen-leads">
+  <div class="page-title">Leads</div>
+  <div class="page-sub">All captured customer leads — ready to follow up</div>
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <button class="action-btn" onclick="filterLeads('all')" style="background:rgba(201,151,58,.15);color:var(--gold2);border:1px solid rgba(201,151,58,.2)">All Leads</button>
+    <button class="action-btn" onclick="filterLeads('wa')">💬 WhatsApp</button>
+    <button class="action-btn" onclick="filterLeads('popup')">🎁 Popup</button>
+    <button class="action-btn" onclick="filterLeads('nl')">📧 Newsletter</button>
+    <button class="action-btn" onclick="filterLeads('order')">📦 Orders</button>
+    <button class="action-btn" style="margin-left:auto;background:rgba(37,211,102,.1);color:#5AE08A;border:1px solid rgba(37,211,102,.2)" onclick="exportLeads()">⬇ Export CSV</button>
+  </div>
+  <div class="card">
+    <div style="overflow-x:auto">
+      <table class="tbl" id="leadsTable"></table>
+    </div>
+  </div>
+</div>
+
+<!-- ── REVENUE ── -->
+<div class="screen" id="screen-revenue">
+  <div class="page-title">Revenue Reports</div>
+  <div class="page-sub">Sales performance & financial overview</div>
+  <div class="kpi-grid">
+    <div class="kpi green"><div class="kpi-label">📅 This Month</div><div class="kpi-val" id="revMonth">₹0</div><div class="kpi-change up">▲ 18% vs last month</div></div>
+    <div class="kpi gold"><div class="kpi-label">📆 This Week</div><div class="kpi-val" id="revWeek">₹0</div><div class="kpi-change up">▲ 12% vs last week</div></div>
+    <div class="kpi blue"><div class="kpi-label">🎯 Avg Order Value</div><div class="kpi-val" id="revAOV">₹0</div><div class="kpi-change up">▲ 5%</div></div>
+    <div class="kpi red"><div class="kpi-label">🔄 Conversion Rate</div><div class="kpi-val">3.2%</div><div class="kpi-change down">▼ 0.4%</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><h3>Monthly Revenue</h3></div>
+      <div class="card-body"><div class="chart-wrap" id="monthlyChart"></div><div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap" id="monthlyLabels"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Revenue by Category</h3></div>
+      <div class="card-body" id="revCatChart"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><h3>Payment Methods</h3></div>
+    <div class="card-body" id="payMethodChart"></div>
+  </div>
+</div>
+
+<!-- ── WHATSAPP CRM ── -->
+<div class="screen" id="screen-whatsapp">
+  <div class="page-title">WhatsApp CRM</div>
+  <div class="page-sub">Send messages & follow up with customers directly</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><h3>Quick Messages</h3><span>Tap to send</span></div>
+      <div class="card-body">
+        <div class="wa-quick" onclick="sendWA('order_confirm')"><div><strong>✅ Order Confirmation</strong>Your order CM-XXXX has been confirmed and will be dispatched within 24 hours.</div></div>
+        <div class="wa-quick" onclick="sendWA('dispatch')"><div><strong>🚚 Dispatched Notification</strong>Your order is on the way! Track at carryme.store/track</div></div>
+        <div class="wa-quick" onclick="sendWA('offer')"><div><strong>🎁 Special Offer</strong>Exclusive 20% off for our valued customer! Use code CARRY20</div></div>
+        <div class="wa-quick" onclick="sendWA('feedback')"><div><strong>⭐ Request Review</strong>We hope you love your CarryMe purchase! Please share your feedback.</div></div>
+        <div class="wa-quick" onclick="sendWA('reorder')"><div><strong>🔄 Re-order Reminder</strong>It's been 30 days — time to refresh your home essentials!</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Custom Message</h3></div>
+      <div class="card-body">
+        <div class="form-group"><label>Customer Phone</label><input id="waPhone" placeholder="+91 XXXXX XXXXX"/></div>
+        <div class="form-group"><label>Message</label><textarea id="waMsg" placeholder="Type your message…">Hi! Thanks for shopping at CarryMe Store 🛒</textarea></div>
+        <div style="display:flex;gap:8px">
+          <button class="submit-btn" style="background:#25D366;color:#fff" onclick="sendCustomWA()">💬 Send WhatsApp</button>
+          <button class="cancel-btn" onclick="document.getElementById('waPhone').value='';document.getElementById('waMsg').value=''">Clear</button>
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--edge)">
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase">Your Numbers</div>
+          <div style="font-size:.82rem;color:var(--cream);margin-bottom:6px">📱 +91 95551 28890</div>
+          <div style="font-size:.82rem;color:var(--cream)">📱 +91 98910 11883</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SETTINGS ── -->
+<div class="screen" id="screen-settings">
+  <div class="page-title">Settings</div>
+  <div class="page-sub">Store configuration & preferences</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><h3>Store Details</h3></div>
+      <div class="card-body">
+        <div class="form-group"><label>Store Name</label><input value="CarryMe Store"/></div>
+        <div class="form-group"><label>Business Name</label><input value="Kashvi Furnishing"/></div>
+        <div class="form-group"><label>GSTIN</label><input value="09DOHPD0171P1ZO"/></div>
+        <div class="form-group"><label>Address</label><input value="Plot 106B, Kala Enclave, Khora Colony, Noida"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>WhatsApp 1</label><input value="+91 95551 28890"/></div>
+          <div class="form-group"><label>WhatsApp 2</label><input value="+91 98910 11883"/></div>
+        </div>
+        <button class="submit-btn" onclick="showToast('✅ Settings saved!','success')">Save Changes</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Payment Settings</h3></div>
+      <div class="card-body">
+        <div class="form-group"><label>UPI ID</label><input value="9555128890@paytm"/></div>
+        <div class="form-group"><label>Razorpay Key ID</label><input placeholder="rzp_live_XXXXXXXXXX" type="password"/></div>
+        <div class="form-group"><label>COD Available</label><select><option>Yes</option><option>No</option></select></div>
+        <div class="form-group"><label>Free Delivery Above (₹)</label><input value="499"/></div>
+        <div class="form-group"><label>COD Extra Charge (₹)</label><input value="30"/></div>
+        <button class="submit-btn" onclick="showToast('✅ Payment settings saved!','success')">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div><!-- end main -->
+</div><!-- end app -->
+
+<!-- ADD PRODUCT MODAL -->
+
+<div class="modal-overlay" id="addProductModal">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-close" onclick="document.getElementById('addProductModal').classList.remove('open')">✕</button>
+    <h3>Add New Product</h3>
+    <div class="form-row">
+      <div class="form-group"><label>Product Name</label><input id="np_name" placeholder="e.g. Premium Table Cover"/></div>
+      <div class="form-group"><label>Category</label>
+        <select id="np_cat"><option value="covers">Table Covers</option><option value="mats">Dining Mats</option><option value="towels">Towels</option><option value="kitchen">Kitchen</option><option value="decor">Decor</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Price (₹)</label><input id="np_price" type="number" placeholder="399"/></div>
+      <div class="form-group"><label>MRP (₹)</label><input id="np_mrp" type="number" placeholder="599"/></div>
+    </div>
+    <div class="form-group"><label>Description</label><textarea id="np_desc" placeholder="Product features and details…"></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>Stock Quantity</label><input id="np_stock" type="number" placeholder="50"/></div>
+      <div class="form-group"><label>Badge</label><select id="np_badge"><option value="">None</option><option>Sale</option><option>New</option><option>Bestseller</option></select></div>
+    </div>
+    <div class="form-group"><label>Image URL</label><input id="np_img" placeholder="https://…"/></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="cancel-btn" onclick="document.getElementById('addProductModal').classList.remove('open')">Cancel</button>
+      <button class="submit-btn" onclick="addProduct()">Add Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER DETAIL MODAL -->
+
+<div class="modal-overlay" id="orderModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('orderModal').classList.remove('open')">✕</button>
+    <h3 id="modalOrderTitle">Order Details</h3>
+    <div id="modalOrderBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="adminToast"></div>
+
+<script>
+// ── DATA ──
+const ORDERS = [
+  {id:'CM-2025-4821',customer:'Priya Sharma',phone:'98765 43210',city:'Pune',items:'Table Cover + Mats',amount:698,status:'transit',date:'25 Apr 2025',payment:'UPI'},
+  {id:'CM-2025-4820',customer:'Rajan Mehta',phone:'91234 56789',city:'Bengaluru',items:'Bath Towel Set',amount:799,status:'delivered',date:'24 Apr 2025',payment:'GPay'},
+  {id:'CM-2025-4819',customer:'Ananya Patel',phone:'99887 65432',city:'Hyderabad',items:'Classic Cotton Cover x2',amount:898,status:'pending',date:'27 Apr 2025',payment:'COD'},
+  {id:'CM-2025-4818',customer:'Suresh Kumar',phone:'98111 22333',city:'Delhi',items:'Hand Towel Set',amount:249,status:'delivered',date:'23 Apr 2025',payment:'Paytm'},
+  {id:'CM-2025-4817',customer:'Meera Joshi',phone:'97765 43210',city:'Mumbai',items:'Dining Mats (6pc)',amount:299,status:'transit',date:'26 Apr 2025',payment:'UPI'},
+  {id:'CM-2025-4816',customer:'Vikram Singh',phone:'96654 32100',city:'Jaipur',items:'Sports Gym Towel',amount:179,status:'delivered',date:'22 Apr 2025',payment:'Card'},
+  {id:'CM-2025-4815',customer:'Pooja Nair',phone:'95543 21000',city:'Chennai',items:'Waterproof PVC Cover',amount:499,status:'cancelled',date:'21 Apr 2025',payment:'COD'},
+  {id:'CM-2025-4814',customer:'Arjun Kapoor',phone:'94432 10000',city:'Noida',items:'Face Towel Pack',amount:199,status:'delivered',date:'20 Apr 2025',payment:'GPay'},
+  {id:'CM-2025-4813',customer:'Deepa Sharma',phone:'93321 00001',city:'Ahmedabad',items:'Placemat Set',amount:349,status:'delivered',date:'19 Apr 2025',payment:'UPI'},
+  {id:'CM-2025-4812',customer:'Rohit Verma',phone:'92210 00002',city:'Lucknow',items:'Bath Towel x2',amount:698,status:'pending',date:'28 Apr 2025',payment:'COD'},
+];
+
+const LEADS = [
+  {id:1,name:'Priya Sharma',contact:'priya@gmail.com',source:'nl',time:'10:42 AM',date:'25 Apr'},
+  {id:2,name:'Rajan Mehta',contact:'+91 91234 56789',source:'wa',time:'11:15 AM',date:'25 Apr'},
+  {id:3,name:'Chat Visitor',contact:'towel price query',source:'chat',time:'12:30 PM',date:'25 Apr'},
+  {id:4,name:'Ananya Patel',contact:'ananya@hotmail.com',source:'popup',time:'2:10 PM',date:'25 Apr'},
+  {id:5,name:'Bulk Inquiry',contact:'+91 98888 00001',source:'wa',time:'3:45 PM',date:'25 Apr'},
+  {id:6,name:'Dealer Lead',contact:'dealer@furnish.com',source:'nl',time:'4:20 PM',date:'25 Apr'},
+  {id:7,name:'Suresh Kumar',contact:'+91 98111 22333',source:'order',time:'5:00 PM',date:'25 Apr'},
+  {id:8,name:'New Visitor',contact:'mat discount query',source:'chat',time:'6:15 PM',date:'25 Apr'},
+];
+
+const PRODUCTS = [
+  {id:1,name:'Premium Table Cover',price:399,old:599,cat:'covers',stock:24,badge:'Sale',img:'https://images.unsplash.com/photo-1616627981467-0b3f9d2c0e6e?w=200&q=60'},
+  {id:2,name:'Dining Mats Set (6pcs)',price:299,old:499,cat:'mats',stock:18,badge:'Bestseller',img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200&q=60'},
+  {id:3,name:'Classic Cotton Cover',price:449,old:700,cat:'covers',stock:31,badge:'New',img:'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=200&q=60'},
+  {id:4,name:'Kitchen Linen Runner',price:249,old:399,cat:'kitchen',stock:45,badge:'',img:'https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=200&q=60'},
+  {id:5,name:'Placemat Set (4pcs)',price:349,old:550,cat:'mats',stock:27,badge:'Sale',img:'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&q=60'},
+  {id:6,name:'Floral Table Runner',price:199,old:350,cat:'decor',stock:52,badge:'New',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&q=60'},
+  {id:7,name:'Waterproof PVC Cover',price:499,old:750,cat:'covers',stock:16,badge:'',img:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&q=60'},
+  {id:8,name:'Premium Bath Towel',price:349,old:550,cat:'towels',stock:38,badge:'Bestseller',img:'https://images.unsplash.com/photo-1600369671236-e74521d4b6ad?w=200&q=60'},
+  {id:9,name:'Hand Towel Set (4pcs)',price:249,old:399,cat:'towels',stock:29,badge:'Sale',img:'https://images.unsplash.com/photo-1583845112239-97ef1341b271?w=200&q=60'},
+  {id:10,name:'Bath Towel Set (3pcs)',price:799,old:1199,cat:'towels',stock:12,badge:'Sale',img:'https://images.unsplash.com/photo-1600369672770-985fd30004eb?w=200&q=60'},
+  {id:11,name:'Sports Gym Towel',price:179,old:299,cat:'towels',stock:61,badge:'',img:'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&q=60'},
+  {id:12,name:'Face Towel Pack (6pcs)',price:199,old:320,cat:'towels',stock:44,badge:'New',img:'https://images.unsplash.com/photo-1563453392212-326f5e854473?w=200&q=60'},
+];
+
+const REVENUE_DAYS = [2100,3400,2800,4200,3100,5600,4800,3900,6200,5100,4400,7800,6500,8200];
+const MONTHLY_REV = [18000,24000,21000,31000,28000,35000,42000,38000,45000,52000,48000,61000];
+const MONTHS = ['May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'];
+
+let allProducts = [...PRODUCTS];
+let allOrders = [...ORDERS];
+let allLeads = [...LEADS];
+
+// ── Navigation ──
+function showScreen(name, el) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+  else document.querySelectorAll('.nav-item').forEach(n => { if (n.textContent.toLowerCase().includes(name)) n.classList.add('active'); });
+}
+
+// ── KPI Chart ──
+function miniChart(containerId, data, cls='') {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const max = Math.max(...data);
+  el.innerHTML = data.map(v => `<div class="kpi-bar ${cls}" style="height:${Math.round(v/max*100)}%"></div>`).join('');
+}
+
+// ── Revenue Chart ──
+function buildRevenueChart() {
+  const el = document.getElementById('revenueChart');
+  const lblEl = document.getElementById('revenueLabels');
+  const max = Math.max(...REVENUE_DAYS);
+  const total = REVENUE_DAYS.reduce((s,v)=>s+v,0);
+  document.getElementById('revTotal').textContent = `₹${total.toLocaleString('en-IN')} total`;
+
+  const days = [];
+  for (let i=13;i>=0;i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    days.push(d.getDate());
+  }
+  el.innerHTML = REVENUE_DAYS.map((v,i) => `
+    <div class="chart-bar-wrap">
+      <div class="chart-bar" style="height:${Math.round(v/max*100)}%">
+        <div class="tip">₹${v.toLocaleString('en-IN')}</div>
+      </div>
+      <div class="chart-lbl">${days[i]}</div>
+    </div>`).join('');
+}
+
+function buildMonthlyChart() {
+  const el = document.getElementById('monthlyChart');
+  const lblEl = document.getElementById('monthlyLabels');
+  if (!el) return;
+  const max = Math.max(...MONTHLY_REV);
+  el.innerHTML = MONTHLY_REV.map((v,i) => `
+    <div class="chart-bar-wrap">
+      <div class="chart-bar" style="height:${Math.round(v/max*100)}%">
+        <div class="tip">₹${(v/1000).toFixed(0)}K</div>
+      </div>
+      <div class="chart-lbl">${MONTHS[i]}</div>
+    </div>`).join('');
+  if (lblEl) lblEl.innerHTML = '';
+}
+
+// ── Category Chart ──
+function buildCategoryChart(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const cats = [{n:'Table Covers',v:38,c:'var(--gold)'},{n:'Towels',v:28,c:'var(--blue2)'},{n:'Dining Mats',v:20,c:'var(--green2)'},{n:'Kitchen',v:8,c:'var(--amber2)'},{n:'Decor',v:6,c:'var(--red2)'}];
+  el.innerHTML = cats.map(c => `
+    <div class="stat-bar-item">
+      <div class="stat-bar-label">${c.n}</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${c.v}%;background:${c.c}"></div></div>
+      <div class="stat-bar-val">${c.v}%</div>
+    </div>`).join('');
+}
+
+// ── Payment Methods Chart ──
+function buildPayChart() {
+  const el = document.getElementById('payMethodChart');
+  if (!el) return;
+  const pays = [{n:'UPI / GPay',v:42,c:'var(--green2)'},{n:'Paytm',v:22,c:'var(--blue2)'},{n:'COD',v:18,c:'var(--amber2)'},{n:'Card',v:12,c:'var(--gold)'},{n:'PhonePe',v:6,c:'var(--red2)'}];
+  el.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' + pays.map(p => `
+    <div class="stat-bar-item">
+      <div class="stat-bar-label">${p.n}</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${p.v}%;background:${p.c}"></div></div>
+      <div class="stat-bar-val">${p.v}%</div>
+    </div>`).join('') + '</div>';
+}
+
+// ── Activity Feed ──
+const ACTIVITIES = [
+  {color:'var(--green2)',text:'New order CM-2025-4821 from Pune — ₹698',t:'2m ago'},
+  {color:'var(--blue2)',text:'Lead captured via WhatsApp (+91 98765…)',t:'5m ago'},
+  {color:'var(--gold2)',text:'Priya Sharma subscribed to newsletter',t:'12m ago'},
+  {color:'var(--green2)',text:'Order CM-2025-4820 delivered ✅',t:'18m ago'},
+  {color:'var(--amber2)',text:'Chat query: "do you have COD?"',t:'24m ago'},
+  {color:'var(--red2)',text:'Order CM-2025-4815 cancelled',t:'35m ago'},
+  {color:'var(--green2)',text:'New order CM-2025-4819 from Hyderabad',t:'41m ago'},
+  {color:'var(--blue2)',text:'42 visitors active on store right now',t:'1h ago'},
+];
+
+function buildActivityFeed() {
+  const el = document.getElementById('activityFeed');
+  if (!el) return;
+  el.innerHTML = ACTIVITIES.map(a => `
+    <div class="activity-item">
+      <div class="act-dot" style="background:${a.color}"></div>
+      <div>
+        <div class="act-text">${a.text}</div>
+        <div class="act-time">${a.t}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── Orders Table ──
+const statusClass = {delivered:'s-delivered',transit:'s-transit',pending:'s-pending',cancelled:'s-cancelled'};
+const statusLabel = {delivered:'✅ Delivered',transit:'🚚 In Transit',pending:'⏳ Pending',cancelled:'❌ Cancelled'};
+
+function renderOrderTable(containerId, orders) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = `
+    <thead><tr>
+      <th>Order ID</th><th>Customer</th><th>City</th><th>Items</th>
+      <th>Amount</th><th>Payment</th><th>Status</th><th>Action</th>
+    </tr></thead>
+    <tbody>${orders.map(o => `
+      <tr>
+        <td><span class="order-id">${o.id}</span></td>
+        <td><strong>${o.customer}</strong><div style="font-size:.7rem;color:var(--muted)">${o.phone}</div></td>
+        <td>${o.city}</td>
+        <td style="font-size:.75rem">${o.items}</td>
+        <td><strong style="color:var(--gold2)">₹${o.amount}</strong></td>
+        <td><span style="font-size:.72rem;color:var(--muted)">${o.payment}</span></td>
+        <td><span class="status-pill ${statusClass[o.status]}"><span class="s-dot"></span>${statusLabel[o.status]}</span></td>
+        <td>
+          <button class="action-btn" onclick="viewOrder('${o.id}')">View</button>
+          <button class="action-btn" style="margin-left:4px" onclick="whatsappCustomer('${o.phone}','${o.id}')">💬</button>
+        </td>
+      </tr>`).join('')}
+    </tbody>`;
+}
+
+function filterOrders(status) {
+  const filtered = status === 'all' ? allOrders : allOrders.filter(o => o.status === status);
+  renderOrderTable('ordersTable', filtered);
+}
+
+function viewOrder(id) {
+  const o = allOrders.find(x => x.id === id);
+  if (!o) return;
+  document.getElementById('modalOrderTitle').textContent = 'Order ' + id;
+  document.getElementById('modalOrderBody').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.82rem;margin-bottom:16px">
+      <div><div style="color:var(--muted);font-size:.7rem;margin-bottom:3px">CUSTOMER</div><strong>${o.customer}</strong><div>${o.phone}</div></div>
+      <div><div style="color:var(--muted);font-size:.7rem;margin-bottom:3px">DELIVERY</div><strong>${o.city}</strong><div>${o.date}</div></div>
+      <div><div style="color:var(--muted);font-size:.7rem;margin-bottom:3px">ITEMS</div>${o.items}</div>
+      <div><div style="color:var(--muted);font-size:.7rem;margin-bottom:3px">PAYMENT</div><strong style="color:var(--gold2)">₹${o.amount}</strong> via ${o.payment}</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="action-btn" onclick="updateStatus('${id}','delivered')">Mark Delivered</button>
+      <button class="action-btn" onclick="updateStatus('${id}','transit')">Mark In Transit</button>
+      <button class="action-btn" onclick="whatsappCustomer('${o.phone}','${id}')">💬 WhatsApp Customer</button>
+      <button class="action-btn" style="color:var(--red2)" onclick="updateStatus('${id}','cancelled')">Cancel Order</button>
+    </div>`;
+  document.getElementById('orderModal').classList.add('open');
+}
+
+function updateStatus(id, status) {
+  const o = allOrders.find(x => x.id === id);
+  if (o) { o.status = status; renderOrderTable('ordersTable', allOrders); renderOrderTable('dashOrderTable', allOrders.slice(0,5)); }
+  document.getElementById('orderModal').classList.remove('open');
+  showToast(`✅ Order ${id} updated to ${statusLabel[status]}`,'success');
+}
+
+function whatsappCustomer(phone, orderId) {
+  const clean = phone.replace(/\s/g,'');
+  const msg = encodeURIComponent(`Hi! This is CarryMe Store. Your order ${orderId} update: we're working on your delivery. For any queries, reply here. Thank you! 🙏`);
+  window.open(`https://wa.me/91${clean}?text=${msg}`,'_blank');
+}
+
+// ── Products ──
+function renderProducts(products) {
+  const el = document.getElementById('productsGrid');
+  el.innerHTML = products.map(p => `
+    <div class="prod-card">
+      <div class="prod-img"><img src="${p.img}" alt="${p.name}" loading="lazy"/></div>
+      <div class="prod-info">
+        <strong>${p.name}</strong>
+        <div class="prod-price">₹${p.price} <span style="text-decoration:line-through;color:var(--muted);font-size:.7rem">₹${p.old}</span></div>
+        <div class="prod-stock">📦 Stock: ${p.stock} · ${p.badge || 'No badge'}</div>
+        <div class="prod-actions">
+          <div class="pa-btn" onclick="showToast('Edit product: ${p.name}','success')">Edit</div>
+          <div class="pa-btn del" onclick="deleteProduct(${p.id})">Delete</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterProducts(cat) {
+  const filtered = cat === 'all' ? allProducts : allProducts.filter(p => p.cat === cat);
+  renderProducts(filtered);
+}
+
+function deleteProduct(id) {
+  if (!confirm('Delete this product?')) return;
+  allProducts = allProducts.filter(p => p.id !== id);
+  renderProducts(allProducts);
+  showToast('🗑 Product deleted','error');
+}
+
+function addProduct() {
+  const name = document.getElementById('np_name').value.trim();
+  const price = parseInt(document.getElementById('np_price').value);
+  const mrp = parseInt(document.getElementById('np_mrp').value);
+  const cat = document.getElementById('np_cat').value;
+  const stock = parseInt(document.getElementById('np_stock').value) || 0;
+  const badge = document.getElementById('np_badge').value;
+  const img = document.getElementById('np_img').value || 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&q=60';
+  if (!name || !price) { showToast('⚠ Fill name & price','error'); return; }
+  const newP = { id: allProducts.length+1, name, price, old:mrp||price, cat, stock, badge, img };
+  allProducts.unshift(newP);
+  renderProducts(allProducts);
+  document.getElementById('addProductModal').classList.remove('open');
+  document.getElementById('nc-products').textContent = allProducts.length;
+  showToast('✅ Product added!','success');
+}
+
+// ── Leads Table ──
+const srcClass = {popup:'ls-popup',nl:'ls-nl',wa:'ls-wa',chat:'ls-chat',order:'ls-order'};
+const srcLabel = {popup:'🎁 Popup',nl:'📧 Newsletter',wa:'💬 WhatsApp',chat:'💬 Chat',order:'📦 Order'};
+
+function renderLeads(leads) {
+  const el = document.getElementById('leadsTable');
+  el.innerHTML = `
+    <thead><tr><th>#</th><th>Name</th><th>Contact</th><th>Source</th><th>Date</th><th>Time</th><th>Action</th></tr></thead>
+    <tbody>${leads.map(l => `
+      <tr>
+        <td style="color:var(--muted)">${l.id}</td>
+        <td><strong>${l.name}</strong></td>
+        <td style="font-family:'DM Mono',monospace;font-size:.75rem">${l.contact}</td>
+        <td><span class="lead-src ${srcClass[l.source]}">${srcLabel[l.source]}</span></td>
+        <td style="color:var(--muted);font-size:.75rem">${l.date}</td>
+        <td style="color:var(--muted);font-size:.75rem">${l.time}</td>
+        <td>
+          <button class="action-btn" onclick="followUpLead('${l.contact}','${l.name}')">💬 Follow Up</button>
+        </td>
+      </tr>`).join('')}
+    </tbody>`;
+}
+
+function filterLeads(src) {
+  const filtered = src === 'all' ? allLeads : allLeads.filter(l => l.source === src);
+  renderLeads(filtered);
+}
+
+function followUpLead(contact, name) {
+  const msg = encodeURIComponent(`Hi ${name}! 👋 This is CarryMe Store. Thank you for your interest! We have amazing offers on table covers, towels and dining mats. Would you like to know more? 🛍`);
+  const phone = contact.replace(/[^0-9]/g,'');
+  if (phone.length >= 10) window.open(`https://wa.me/91${phone.slice(-10)}?text=${msg}`,'_blank');
+  else showToast('No phone number for this lead','error');
+}
+
+// ── Export ──
+function exportOrders() {
+  const csv = 'Order ID,Customer,Phone,City,Items,Amount,Payment,Status,Date\n' +
+    allOrders.map(o => `"${o.id}","${o.customer}","${o.phone}","${o.city}","${o.items}",${o.amount},"${o.payment}","${o.status}","${o.date}"`).join('\n');
+  download('carryme_orders.csv', csv);
+  showToast('⬇ Orders exported!','success');
+}
+
+function exportLeads() {
+  const csv = 'ID,Name,Contact,Source,Date,Time\n' +
+    allLeads.map(l => `${l.id},"${l.name}","${l.contact}","${l.source}","${l.date}","${l.time}"`).join('\n');
+  download('carryme_leads.csv', csv);
+  showToast('⬇ Leads exported!','success');
+}
+
+function download(filename, text) {
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(text);
+  a.download = filename; a.click();
+}
+
+// ── WhatsApp CRM ──
+function sendWA(type) {
+  const msgs = {
+    order_confirm: 'Hi! Your CarryMe order has been confirmed ✅ and will be dispatched within 24 hours. Thank you for shopping with us!',
+    dispatch: 'Hi! Your CarryMe order has been dispatched 🚚 and is on the way! Track at: www.carryme.store',
+    offer: 'Hi! 🎁 Exclusive offer for you — 20% OFF on all products! Use code CARRY20 at carryme.store. Valid for 48 hours only!',
+    feedback: 'Hi! 😊 We hope you love your CarryMe purchase! Please share your experience — your feedback means the world to us.',
+    reorder: 'Hi! 👋 It\'s been a while! Time to refresh your home with CarryMe\'s latest collection. Shop now at carryme.store',
+  };
+  const msg = encodeURIComponent(msgs[type]);
+  window.open(`https://wa.me/919555128890?text=${msg}`,'_blank');
+  showToast('Opening WhatsApp…','success');
+}
+
+function sendCustomWA() {
+  const phone = document.getElementById('waPhone').value.replace(/[^0-9]/g,'');
+  const msg = document.getElementById('waMsg').value.trim();
+  if (!phone || !msg) { showToast('⚠ Enter phone & message','error'); return; }
+  window.open(`https://wa.me/91${phone.slice(-10)}?text=${encodeURIComponent(msg)}`,'_blank');
+  showToast('✅ WhatsApp opened!','success');
+}
+
+// ── Toast ──
+function showToast(msg, type='') {
+  const t = document.getElementById('adminToast');
+  t.textContent = msg; t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Global Search ──
+function globalSearch(val) {
+  if (!val.trim()) return;
+  const orderMatch = allOrders.filter(o => o.id.includes(val.toUpperCase()) || o.customer.toLowerCase().includes(val.toLowerCase()));
+  if (orderMatch.length) { showScreen('orders', null); renderOrderTable('ordersTable', orderMatch); }
+}
+
+// ── Clock ──
+function updateClock() {
+  const now = new Date();
+  document.getElementById('topTime').textContent = now.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+updateClock(); setInterval(updateClock, 1000);
+
+// ── Set date ──
+document.getElementById('dashDate').textContent = new Date().toLocaleDateString('en-IN', {weekday:'long',day:'numeric',month:'long',year:'numeric'}) + ' · Kashvi Furnishing Admin';
+
+// ── Init KPIs ──
+const todayRev = REVENUE_DAYS[REVENUE_DAYS.length-1];
+const lastRev = REVENUE_DAYS[REVENUE_DAYS.length-2];
+const todayOrders = 5; const todayLeads = 8; const todayVisitors = 142;
+document.getElementById('kpiRev').textContent = '₹' + todayRev.toLocaleString('en-IN');
+document.getElementById('kpiRevChange').textContent = '▲ ' + Math.round((todayRev-lastRev)/lastRev*100) + '% vs yesterday';
+document.getElementById('kpiOrders').textContent = todayOrders;
+document.getElementById('kpiOrdChange').textContent = '▲ 25% vs yesterday';
+document.getElementById('kpiLeads').textContent = todayLeads;
+document.getElementById('kpiLeadChange').textContent = '▲ 14% vs yesterday';
+document.getElementById('kpiVisitors').textContent = todayVisitors;
+document.getElementById('kpiVisChange').textContent = '▲ 8% vs yesterday';
+
+// Revenue stats
+const monthRev = MONTHLY_REV[MONTHLY_REV.length-1];
+const weekRev = REVENUE_DAYS.slice(-7).reduce((s,v)=>s+v,0);
+const aov = Math.round(allOrders.reduce((s,o)=>s+o.amount,0)/allOrders.length);
+if (document.getElementById('revMonth')) document.getElementById('revMonth').textContent = '₹' + monthRev.toLocaleString('en-IN');
+if (document.getElementById('revWeek')) document.getElementById('revWeek').textContent = '₹' + weekRev.toLocaleString('en-IN');
+if (document.getElementById('revAOV')) document.getElementById('revAOV').textContent = '₹' + aov;
+
+// Mini charts
+miniChart('kpiRevChart', REVENUE_DAYS.slice(-7));
+miniChart('kpiOrdChart', [2,4,3,6,5,7,5], 'gold');
+miniChart('kpiLeadChart', [3,5,4,7,6,8,8], 'blue');
+miniChart('kpiVisChart', [80,120,95,140,110,155,142], 'red');
+
+// Build all charts & tables
+buildRevenueChart();
+buildActivityFeed();
+buildCategoryChart('categoryChart');
+buildCategoryChart('revCatChart');
+buildMonthlyChart();
+buildPayChart();
+renderOrderTable('dashOrderTable', allOrders.slice(0,5));
+renderOrderTable('ordersTable', allOrders);
+renderProducts(allProducts);
+renderLeads(allLeads);
+
+// Live activity ticker — adds new activity every 12s
+const liveActs = [
+  'New visitor from Delhi — viewing Table Covers',
+  'Lead captured via exit popup',
+  'Chat query: "What is delivery time?"',
+  'New order placed from Mumbai',
+  'WhatsApp message received',
+  '3 new visitors from Instagram',
+];
+let actIdx = 0;
+setInterval(() => {
+  const feed = document.getElementById('activityFeed');
+  if (!feed) return;
+  const colors = ['var(--green2)','var(--blue2)','var(--amber2)','var(--gold2)'];
+  const div = document.createElement('div');
+  div.className = 'activity-item';
+  div.style.animation = 'fadeIn .3s ease';
+  div.innerHTML = `<div class="act-dot" style="background:${colors[actIdx%4]}"></div><div><div class="act-text">${liveActs[actIdx%liveActs.length]}</div><div class="act-time">just now</div></div>`;
+  feed.prepend(div);
+  if (feed.children.length > 12) feed.lastChild.remove();
+  actIdx++;
+  // bump visitor count
+  const v = document.getElementById('kpiVisitors');
+  if (v) v.textContent = parseInt(v.textContent) + Math.floor(Math.random()*3);
+}, 12000);
+</script>
 
 </body>
 </html>
